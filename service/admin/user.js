@@ -99,12 +99,14 @@ module.exports = {
           if (findUserMsg.code === 0) {
             // 存在用户再次插入
             if (type) {
-              returmMsg += `跳过工号为${userInfo.jobId}的员工录入；`
+              returmMsg += `跳过工号为${userInfo.jobId}的员工信息录入；`
               continue
             } else {
               const res = await that.update(userInfo, { jobId: userInfo.jobId })
               if (res.code) {
                 returmMsg += `工号${userInfo.jobId}录入错误：${res.message}；`
+              } else {
+                returmMsg += `重写工号为${userInfo.jobId}的员工信息；`
               }
             }
           } else {
