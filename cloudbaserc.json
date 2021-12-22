@@ -1,0 +1,15 @@
+{
+    "envId": "static-176d4a",
+    "framework": {
+        "name": "third",
+        "plugins": {
+            "node": {
+                "use": "@cloudbase/framework-plugin-node",
+                "inputs": {
+                    "name": "third",
+                    "path": "/third"
+                }
+            }
+        }
+    }
+}
