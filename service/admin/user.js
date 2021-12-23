@@ -2,6 +2,8 @@ const { user } = require('~/models')
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
 const xlsx = require('xlsx')
+const Sequelize = require('sequelize')
+const op = Sequelize.Op
 
 const forMatXlsxData = (data) => {
   const result = []
@@ -24,10 +26,18 @@ const forMatXlsxData = (data) => {
 }
 
 module.exports = {
-  async list (data) {
+  async list (data, ctx) {
+    // 查找列表需要根据公司id的层级条件进行查找
     try {
       data = util.format.dataProcessor(data)
-      const result = await user.findAndCountAll(data)
+      const result = await user.findAndCountAll({
+        ...data,
+        where: {
+          companyId: {
+            [op.like]: `${ctx.session_user.companyId}%`
+          }
+        }
+      })
       return util.format.sucHandler(result, 'list')
     } catch (ex) {
       logger.error(`list|error:${ex.message}|stack:${ex.stack}`)

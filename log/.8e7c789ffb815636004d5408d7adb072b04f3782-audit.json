@@ -1,0 +1,14 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 7
+    },
+    "auditLog": "log/.8e7c789ffb815636004d5408d7adb072b04f3782-audit.json",
+    "files": [
+        {
+            "date": 1640258201489,
+            "name": "log/koa-seed-20211223.log",
+            "hash": "e8a557cb1bcc053835d262487406d933"
+        }
+    ]
+}
