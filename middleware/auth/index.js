@@ -1,38 +1,31 @@
-const debug = require('debug')('rocket-node:auth')
-const error = require('debug')('rocket-node-error:auth')
-const jwt = require('~/libs/jwt')
+const { SECRET, VOID_TOKEN, LOGIN_EXPRESS } = require('~/const')
+const jwt = require('jsonwebtoken')
 
-const whiteList = [
-  '/admin/passport/user/login',
-  '/admin/passport/user/captcha'
-]
-
-module.exports = function (app, options) {
-  return async function rocketAuth (ctx, next) {
-    for (const p of whiteList) {
-      const rep = new RegExp(p)
-      if (rep.test(ctx.url)) {
-        return next()
-      }
+module.exports = function (ignoreApi = []) {
+  return async (ctx, next) => {
+    if (ignoreApi.indexOf(ctx.url) !== -1) {
+      await next()
+      return
     }
-    const token = ctx.cookies.get('token')
-    if (token) {
-      debug(token)
-      const isVerify = jwt.verify(token)
-      if (isVerify) {
-        debug('login success')
-        return next()
-      } else {
-        error('token is not pass')
-        ctx.status = 401
+    try {
+      const res = await jwt.verify(ctx.header.authorization.slice(7), SECRET)
+      ctx.session_user = res
+      await next()
+    } catch (error) {
+      switch (error.name) {
+        case 'TokenExpiredError':
+          ctx.body = {
+            code: LOGIN_EXPRESS,
+            message: '登录失效，请重新登录'
+          }
+          break
+        default:
+          ctx.body = {
+            code: VOID_TOKEN,
+            message: '非法的token，请检查token是否携带正确'
+          }
+          break
       }
-    } else {
-      error('token is miss')
-      ctx.body = {
-        code: 401,
-        message: 'token is miss'
-      }
-      ctx.status = 401
     }
   }
 }
