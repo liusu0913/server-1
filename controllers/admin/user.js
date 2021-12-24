@@ -1,5 +1,5 @@
-const service = require('~/service/admin/user')
-const schema = require('~/validators/admin/system/user')
+const service = require('~/service/user')
+const schema = require('~/validators/admin/user')
 const util = require('~/util')
 
 exports.list = async (ctx) => {
@@ -27,7 +27,19 @@ exports.update = async (ctx) => {
     const data = ctx.request.body
     await util.validator.check(schema, 'update', data)
     const { jobId } = data
-    delete data.id
+    delete data.jobId
+    ctx.body = await service.update(data, { jobId })
+  } catch (error) {
+    ctx.body = util.format.errHandler(error)
+  }
+}
+
+exports.active = async (ctx) => {
+  try {
+    const data = ctx.request.body
+    await util.validator.check(schema, 'active', data)
+    const { jobId } = data
+    delete data.jobId
     ctx.body = await service.update(data, { jobId })
   } catch (error) {
     ctx.body = util.format.errHandler(error)
@@ -37,9 +49,13 @@ exports.update = async (ctx) => {
 exports.delete = async (ctx) => {
   try {
     const data = ctx.request.body
-    const { id } = data
+    const { jobId } = data
     await util.validator.check(schema, 'delete', data)
-    ctx.body = await service.delete({ id })
+    ctx.body = await service.delete({
+      where: {
+        jobId
+      }
+    })
   } catch (error) {
     ctx.body = util.format.errHandler(error)
   }

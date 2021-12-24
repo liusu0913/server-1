@@ -7,13 +7,22 @@ module.exports = {
     required: ['jobId', 'name', 'title', 'companyId', 'company']
   },
   update: {
-    required: ['id']
+    required: ['jobId']
+  },
+  active: {
+    require: ['jobId', 'status'],
+    properties: {
+      status: {
+        type: 'string',
+        enum: ['0', '1']
+      }
+    }
   },
   delete: {
-    required: ['id']
+    required: ['jobId']
   },
   info: {
-    required: ['id']
+    required: ['jobId']
   },
   // 批量操作的type：1覆盖； 0跳过
   batchAdd: {

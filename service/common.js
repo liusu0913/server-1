@@ -1,4 +1,4 @@
-const userService = require('~/service/admin/user')
+const userService = require('~/service/user')
 const { SECRET, NO_REGISTER, LOGIN_PASSWORD_ERROR } = require('~/const')
 const jwt = require('jsonwebtoken')
 

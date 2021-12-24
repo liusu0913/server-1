@@ -1,5 +1,5 @@
-const schema = require('~/validators/common/index')
-const service = require('~/service/common/index')
+const schema = require('~/validators/common')
+const service = require('~/service/common')
 const util = require('~/util')
 
 exports.login = async (ctx) => {

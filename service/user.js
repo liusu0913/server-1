@@ -68,7 +68,8 @@ module.exports = {
   },
   async delete (where) {
     try {
-      const [count = 0] = await user.update({ disabled: 1 }, { where })
+      console.log(where)
+      const count = await user.destroy(where)
       if (count > 0) {
         return util.format.sucHandler({ count })
       } else {

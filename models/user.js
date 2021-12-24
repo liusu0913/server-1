@@ -43,7 +43,7 @@ module.exports = sequelize => {
     },
     phone: {
       type: DataTypes.STRING(255),
-      allowNull: true,
+      allowNull: false,
       defaultValue: "",
       primaryKey: false,
       autoIncrement: false,
@@ -52,12 +52,21 @@ module.exports = sequelize => {
     },
     role: {
       type: DataTypes.ENUM('0', '1'),
-      allowNull: true,
+      allowNull: false,
       defaultValue: "0",
       primaryKey: false,
       autoIncrement: false,
-      comment: null,
+      comment: "角色：1是管理员；0是普通员工",
       field: "role"
+    },
+    status: {
+      type: DataTypes.ENUM('0', '1'),
+      allowNull: false,
+      defaultValue: "1",
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "用户状态1是激活0是未激活",
+      field: "status"
     },
     companyId: {
       type: DataTypes.STRING(255),
