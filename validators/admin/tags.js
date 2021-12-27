@@ -3,16 +3,7 @@ module.exports = {
     required: ['offset', 'count']
   },
   create: {
-    required: [
-      'jobId',
-      'name',
-      'title',
-      'phone',
-      'company',
-      'companyId',
-      'role',
-      'belongCompany'
-    ]
+    required: ['name', 'fatherId']
   },
   update: {
     required: ['id']
@@ -35,31 +26,11 @@ module.exports = {
       id: {
         type: 'integer'
       },
-      jobId: {
-        type: 'string',
-        maxLength: 255
-      },
       name: {
         type: 'string',
         maxLength: 255
       },
-      title: {
-        type: 'string',
-        maxLength: 255
-      },
-      phone: {
-        type: 'string',
-        maxLength: 255
-      },
-      company: {
-        type: 'string',
-        maxLength: 255
-      },
-      companyId: {
-        type: 'string',
-        maxLength: 255
-      },
-      role: {
+      fatherId: {
         type: 'integer'
       },
       belongCompany: {

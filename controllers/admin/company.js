@@ -1,5 +1,5 @@
-const service = require('~/service/admin/user')
-const schema = require('~/validators/admin/system/user')
+const service = require('~/service/company')
+const schema = require('~/validators/admin/company')
 const util = require('~/util')
 
 exports.list = async (ctx) => {
@@ -39,18 +39,11 @@ exports.delete = async (ctx) => {
     const data = ctx.request.body
     const { id } = data
     await util.validator.check(schema, 'delete', data)
-    ctx.body = await service.delete({ id })
-  } catch (error) {
-    ctx.body = util.format.errHandler(error)
-  }
-}
-
-exports.info = async (ctx) => {
-  try {
-    const data = ctx.request.body
-    const { id } = data
-    await util.validator.check(schema, 'info', data)
-    ctx.body = await service.info({ id })
+    ctx.body = await service.delete({
+      where: {
+        id
+      }
+    })
   } catch (error) {
     ctx.body = util.format.errHandler(error)
   }

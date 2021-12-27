@@ -1,5 +1,6 @@
 const _ = require('lodash')
 const error = require('debug')('rocket-node-util:router')
+const { REPETADD } = require('~/const')
 
 /**
  * 错误结果格式化
@@ -7,6 +8,12 @@ const error = require('debug')('rocket-node-util:router')
  * @param {number} code 错误码
  */
 const errHandler = (message = '', code = 1001) => {
+  if (message.message === 'Validation error') {
+    return {
+      code: REPETADD,
+      message: '数据已经存在不要重复添加'
+    }
+  }
   error(message)
   if (typeof message !== 'string') {
     message = message.message

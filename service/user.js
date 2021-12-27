@@ -68,9 +68,6 @@ module.exports = {
       return util.format.sucHandler(result)
     } catch (ex) {
       logger.error(`create|error:${ex.message}|stack:${ex.stack}`)
-      if (ex.message === 'Validation error') {
-        return util.format.errHandler('用户信息已经存在')
-      }
       return util.format.errHandler(ex)
     }
   },

@@ -31,9 +31,9 @@ if (mysql !== '') {
     },
     modules: [
       { // 管理端——用户
-        controller: 'admin/system/user',
-        service: 'admin/user',
-        table: 'user',
+        controller: 'admin/system/tags',
+        service: 'admin/tags',
+        table: 'tags',
         validator: true
       }
     ],
