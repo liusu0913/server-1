@@ -29,13 +29,15 @@ module.exports = {
   async list (data, ctx) {
     // 查找列表需要根据公司id的层级条件进行查找
     try {
+      const { session_user } = ctx
       data = util.format.dataProcessor(data)
       const result = await user.findAndCountAll({
         ...data,
         where: {
           companyId: {
             [op.like]: `${ctx.session_user.companyId}%`
-          }
+          },
+          belongCompany: session_user.belongCompany
         }
       })
       return util.format.sucHandler(result, 'list')
@@ -44,17 +46,42 @@ module.exports = {
       return util.format.errHandler(ex)
     }
   },
-  async create (data) {
+  async create (data, ctx) {
     try {
+      const { session_user } = ctx
+      if (session_user.role) {
+        data.belongCompany = session_user.belongCompany
+      }
+      if (session_user.role >= data.role) {
+        return {
+          code: 1002,
+          message: `权限错误：role为${session_user.role}级用户只能创建 ${session_user.role + 1} - 3级用户`
+        }
+      }
+      if (session_user.role > 1) {
+        return {
+          code: 1002,
+          message: '权限错误：没有权限创建用户信息'
+        }
+      }
       const result = await user.create(data)
       return util.format.sucHandler(result)
     } catch (ex) {
       logger.error(`create|error:${ex.message}|stack:${ex.stack}`)
+      if (ex.message === 'Validation error') {
+        return util.format.errHandler('用户信息已经存在')
+      }
       return util.format.errHandler(ex)
     }
   },
-  async update (data, where = {}) {
+  async update (data, where = {}, ctx) {
     try {
+      const { session_user } = ctx
+      where = {
+        ...where,
+        belongCompany: session_user.belongCompany
+      }
+      console.log(where)
       const [count = 0] = await user.update(data, { where })
       if (count > 0) {
         return util.format.sucHandler({ count })
@@ -66,10 +93,14 @@ module.exports = {
       return util.format.errHandler(ex)
     }
   },
-  async delete (where) {
+  async delete ({ where }, ctx) {
     try {
-      console.log(where)
-      const count = await user.destroy(where)
+      const { session_user } = ctx
+      where = {
+        ...where,
+        belongCompany: session_user.belongCompany
+      }
+      const count = await user.destroy({ where })
       if (count > 0) {
         return util.format.sucHandler({ count })
       } else {
@@ -80,8 +111,13 @@ module.exports = {
       return util.format.errHandler(ex)
     }
   },
-  async info (where) {
+  async info (where, ctx) {
     try {
+      const { session_user } = ctx
+      where = {
+        ...where,
+        belongCompany: session_user.belongCompany
+      }
       const result = await user.findOne({ where })
       if (result) {
         return util.format.sucHandler(result)
@@ -93,7 +129,7 @@ module.exports = {
       return util.format.errHandler(ex)
     }
   },
-  async batchAdd ({ filePath, type }) {
+  async batchAdd ({ filePath, type, role, ctx }) {
     const that = this
     const workbook = await xlsx.readFile(filePath)
     const sheetNames = workbook.SheetNames // 返回 ['sheet1', ...]
@@ -105,8 +141,9 @@ module.exports = {
       // type:0覆盖；type：1跳过
       for (let i = 0; i < data.length; i++) {
         const userInfo = data[i]
+        userInfo.role = role
         if (userInfo.jobId) {
-          const findUserMsg = await that.info({ jobId: userInfo.jobId })
+          const findUserMsg = await that.info({ jobId: userInfo.jobId }, ctx)
           if (findUserMsg.code === 0) {
             // 存在用户再次插入
             if (type) {
@@ -121,7 +158,7 @@ module.exports = {
               }
             }
           } else {
-            const res = that.create(userInfo)
+            const res = that.create(userInfo, ctx)
             if (res.code) {
               returmMsg += `工号${userInfo.jobId}录入错误：${res.message}；`
             }

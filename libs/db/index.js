@@ -14,6 +14,11 @@ const options = {
   }
 }
 
+function customLogger (queryString, queryObject) {
+  console.log(queryString) // outputs a string
+  console.log(queryObject.bind) // outputs an array
+}
+
 const sequelize = new Sequelize(database, username, password, options)
 
 sequelize.authenticate().then(() => console.log('connected')).catch(err => console.log(err))

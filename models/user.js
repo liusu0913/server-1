@@ -5,12 +5,12 @@ const {
 module.exports = sequelize => {
   const attributes = {
     id: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.INTEGER(10),
       allowNull: false,
       defaultValue: null,
       primaryKey: true,
       autoIncrement: true,
-      comment: "主键",
+      comment: null,
       field: "id"
     },
     jobId: {
@@ -20,8 +20,7 @@ module.exports = sequelize => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "job_id",
-      unique: "uk_job_id"
+      field: "job_id"
     },
     name: {
       type: DataTypes.STRING(255),
@@ -44,38 +43,11 @@ module.exports = sequelize => {
     phone: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      defaultValue: "",
+      defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
       comment: null,
       field: "phone"
-    },
-    role: {
-      type: DataTypes.ENUM('0', '1'),
-      allowNull: false,
-      defaultValue: "0",
-      primaryKey: false,
-      autoIncrement: false,
-      comment: "角色：1是管理员；0是普通员工",
-      field: "role"
-    },
-    status: {
-      type: DataTypes.ENUM('0', '1'),
-      allowNull: false,
-      defaultValue: "1",
-      primaryKey: false,
-      autoIncrement: false,
-      comment: "用户状态1是激活0是未激活",
-      field: "status"
-    },
-    companyId: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: "公司代码",
-      field: "company_id"
     },
     company: {
       type: DataTypes.STRING(255),
@@ -83,32 +55,73 @@ module.exports = sequelize => {
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "公司地址",
+      comment: null,
       field: "company"
     },
-    createdAt: {
-      type: DataTypes.DATE,
+    companyId: {
+      type: DataTypes.STRING(255),
       allowNull: false,
-      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "created_at"
+      field: "company_id"
+    },
+    status: {
+      type: DataTypes.ENUM('0', '1'),
+      allowNull: true,
+      defaultValue: "1",
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "status"
+    },
+    role: {
+      type: DataTypes.INTEGER(10),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "role"
+    },
+    belongCompany: {
+      type: DataTypes.INTEGER(10),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "belong_company"
     },
     updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
       comment: null,
       field: "updated_at"
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "created_at"
     }
   };
   const options = {
     tableName: "user",
     comment: "",
-    indexes: []
+    indexes: [{
+      name: "uk_job_id",
+      unique: true,
+      type: "BTREE",
+      fields: ["job_id", "belong_company"]
+    }]
   };
   const UserModel = sequelize.define("userModel", attributes, options);
   return UserModel;

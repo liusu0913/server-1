@@ -1,4 +1,3 @@
-
 module.exports = {
   list: {
     required: ['offset', 'count']
@@ -9,41 +8,20 @@ module.exports = {
       'name',
       'title',
       'phone',
-      'role',
+      'company',
       'companyId',
-      'company'
+      'role',
+      'belongCompany'
     ]
   },
   update: {
-    required: ['jobId']
-  },
-  active: {
-    require: ['jobId', 'status'],
-    properties: {
-      status: {
-        type: 'string',
-        enum: ['0', '1']
-      }
-    }
+    required: ['id']
   },
   delete: {
-    required: ['jobId']
+    required: ['id']
   },
   info: {
-    required: ['jobId']
-  },
-  // 批量操作的type：1覆盖； 0跳过
-  batchAdd: {
-    required: ['file', 'type', 'role'],
-    properties: {
-      file: {
-        type: 'object'
-      },
-      type: {
-        type: 'number',
-        enum: [0, 1]
-      }
-    }
+    required: ['id']
   },
   schema: {
     type: 'object',
