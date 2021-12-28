@@ -64,7 +64,12 @@ exports.delete = async (ctx) => {
 exports.info = async (ctx) => {
   try {
     const data = ctx.request.body
-    const { jobId } = data
+    let jobId
+    if (data.jobId) {
+      jobId = data.jobId
+    } else {
+      jobId = ctx.session_user.jobId
+    }
     await util.validator.check(schema, 'info', data)
     ctx.body = await service.info({ jobId }, ctx)
   } catch (error) {

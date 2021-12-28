@@ -19,6 +19,7 @@ module.exports = function (ignoreApi = []) {
       ctx.session_user = res
       await next()
     } catch (error) {
+      console.log(error)
       switch (error.name) {
         case 'TokenExpiredError':
           ctx.body = {
@@ -29,7 +30,7 @@ module.exports = function (ignoreApi = []) {
         default:
           ctx.body = {
             code: VOID_TOKEN,
-            message: '非法的token，请检查token是否携带正确'
+            message: '非法的token'
           }
           break
       }

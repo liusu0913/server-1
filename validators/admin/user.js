@@ -18,36 +18,32 @@ module.exports = {
     required: ['jobId']
   },
   active: {
-    require: ['jobId', 'status'],
-    properties: {
-      status: {
-        type: 'string',
-        enum: ['0', '1']
-      }
-    }
+    require: ['jobId', 'status']
   },
   delete: {
     required: ['jobId']
   },
   info: {
-    required: ['jobId']
+    required: []
   },
   // 批量操作的type：1覆盖； 0跳过
   batchAdd: {
-    required: ['file', 'type', 'role'],
+    required: ['file', 'type', 'role']
+  },
+  schema: {
+    type: 'object',
     properties: {
+      status: {
+        type: 'string',
+        enum: ['0', '1']
+      },
       file: {
         type: 'object'
       },
       type: {
         type: 'number',
         enum: [0, 1]
-      }
-    }
-  },
-  schema: {
-    type: 'object',
-    properties: {
+      },
       offset: {
         type: 'integer'
       },

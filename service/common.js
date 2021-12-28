@@ -1,8 +1,11 @@
+/* eslint-disable handle-callback-err */
+/* eslint-disable promise/param-names */
 const util = require('~/util')
 const { user } = require('~/models')
-
 const { SECRET, NO_REGISTER, LOGIN_PASSWORD_ERROR } = require('~/const')
 const jwt = require('jsonwebtoken')
+const STS = require('qcloud-cos-sts')
+// 获取临时密匙
 
 module.exports = {
   async login (body) {
@@ -21,14 +24,15 @@ module.exports = {
     if (resultID) {
       resID = util.format.sucHandler(resultID)
     } else {
-      resID = util.format.errHandler('没有找到任何符合条件的记录!')
+      resID = util.format.errHandler('工号未注册!')
     }
 
     if (resultP) {
       resP = util.format.sucHandler(resultP)
     } else {
-      resP = util.format.errHandler('没有找到任何符合条件的记录!')
+      resP = util.format.errHandler('密码填写错误!')
     }
+
     if (resID.code !== 0) {
       return {
         code: NO_REGISTER,
@@ -59,5 +63,46 @@ module.exports = {
       },
       message: 'success'
     }
+  },
+  async getCosConfig ({ bucket, region, allowPrefix = 'avatar', durationSeconds = 1800 }) {
+    // 配置参数
+    var config = {
+      secretId: 'AKIDqXy93f04rNcacPwCBtKUNyIM8dqmSr0s', // 固定密钥
+      secretKey: 'e16uRgeLlvoQlpc8NL2RZQ0JK4XicFbg', // 固定密钥
+      bucket,
+      region
+    }
+
+    const scope = [{
+      action: 'name/cos:PutObject',
+      bucket: config.bucket,
+      region: config.region,
+      prefix: 'exampleobject'
+    }]
+    return new Promise((resolve) => {
+      try {
+        const policy = STS.getPolicy(scope)
+        STS.getCredential({
+          secretId: config.secretId,
+          secretKey: config.secretKey,
+          proxy: config.proxy,
+          policy: policy,
+          allowPrefix,
+          durationSeconds
+        }, function (err, res) {
+          if (err) {
+            resolve(util.format.errHandler(`${err.Code}:${err.Message}`))
+          }
+          const { credentials } = res
+          resolve({
+            code: 0,
+            data: credentials,
+            message: 'success'
+          })
+        })
+      } catch (error) {
+        return error
+      }
+    })
   }
 }
