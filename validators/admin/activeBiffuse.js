@@ -3,15 +3,9 @@ module.exports = {
     required: ['offset', 'count']
   },
   create: {
-    required: ['name', 'fatherId', 'belongCompany']
-  },
-  update: {
-    required: ['id']
+    required: ['title']
   },
   delete: {
-    required: ['id']
-  },
-  info: {
     required: ['id']
   },
   schema: {
@@ -26,21 +20,12 @@ module.exports = {
       id: {
         type: 'integer'
       },
-      name: {
-        type: 'string',
-        maxLength: 255
-      },
-      fatherId: {
-        type: 'integer'
-      },
       belongCompany: {
         type: 'integer'
       },
-      updatedAt: {
-        type: 'string'
-      },
-      createdAt: {
-        type: 'string'
+      title: {
+        type: 'string',
+        maxLength: 255
       }
     }
   }

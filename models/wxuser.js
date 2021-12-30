@@ -40,14 +40,32 @@ module.exports = sequelize => {
       comment: null,
       field: "avatar"
     },
-    referrerId: {
+    phone: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "手机号",
+      field: "phone"
+    },
+    referrerJobId: {
       type: DataTypes.STRING(255),
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: null,
-      field: "referrer_id"
+      comment: "活动发出的员工ID",
+      field: "referrer_job_id"
+    },
+    activeId: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "活动ID",
+      field: "active_id"
     },
     belongCompany: {
       type: DataTypes.INTEGER(10),
@@ -57,6 +75,15 @@ module.exports = sequelize => {
       autoIncrement: false,
       comment: null,
       field: "belong_company"
+    },
+    sourceOpenId: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "用户来自其他用户的分享",
+      field: "source_open_id"
     },
     updatedAt: {
       type: DataTypes.DATE,

@@ -3,7 +3,15 @@ module.exports = {
     required: ['offset', 'count']
   },
   create: {
-    required: ['openId', 'name', 'avatar', 'referrerId', 'belongCompany']
+    required: [
+      'activeId',
+      'title',
+      'url',
+      'typeId',
+      'diffuseTypeId',
+      'startTime',
+      'belongCompany'
+    ]
   },
   update: {
     required: ['id']
@@ -26,24 +34,35 @@ module.exports = {
       id: {
         type: 'integer'
       },
-      openId: {
+      activeId: {
         type: 'string',
         maxLength: 255
       },
-      name: {
+      title: {
         type: 'string',
         maxLength: 255
       },
-      avatar: {
+      url: {
         type: 'string',
         maxLength: 255
       },
-      referrerId: {
-        type: 'string',
-        maxLength: 255
+      typeId: {
+        type: 'integer'
+      },
+      diffuseTypeId: {
+        type: 'integer'
+      },
+      startTime: {
+        type: 'string'
       },
       belongCompany: {
         type: 'integer'
+      },
+      createdAt: {
+        type: 'string'
+      },
+      updatedAt: {
+        type: 'string'
       }
     }
   }

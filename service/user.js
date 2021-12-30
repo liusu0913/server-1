@@ -78,7 +78,6 @@ module.exports = {
         ...where,
         belongCompany: session_user.belongCompany
       }
-      console.log(where)
       const [count = 0] = await user.update(data, { where })
       if (count > 0) {
         return util.format.sucHandler({ count })
@@ -147,7 +146,7 @@ module.exports = {
               returmMsg += `跳过工号为${userInfo.jobId}的员工信息录入；`
               continue
             } else {
-              const res = await that.update(userInfo, { jobId: userInfo.jobId })
+              const res = await that.update(userInfo, { jobId: userInfo.jobId }, ctx)
               if (res.code) {
                 returmMsg += `工号${userInfo.jobId}录入错误：${res.message}；`
               } else {

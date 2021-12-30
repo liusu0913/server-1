@@ -31,22 +31,22 @@ if (mysql !== '') {
     },
     modules: [
       { // 管理端——用户
-        controller: 'admin/system/wxuser',
-        service: 'admin/wxuser',
-        table: 'wxuser',
+        controller: 'admin/system/active',
+        service: 'admin/active',
+        table: 'active',
         validator: true
       }
     ],
     associations: [
-      // {
-      //   source: 'admin_user',
-      //   foreign: 'admin_role',
-      //   relation: 'belongsTo',
-      //   options: {
-      //     sourceKey: 'id',
-      //     foreignKey: 'role_id'
-      //   }
-      // }
+      {
+        source: 'active',
+        foreign: 'activeTags',
+        relation: 'hasMany',
+        options: {
+          sourceKey: 'active_id',
+          foreignKey: 'active_id'
+        }
+      }
     ]
   }
 } else {

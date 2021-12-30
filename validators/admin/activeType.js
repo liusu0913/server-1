@@ -1,11 +1,17 @@
 module.exports = {
   list: {
-    required: ['offset', 'count', 'fatherId']
+    required: ['offset', 'count']
   },
   create: {
-    required: ['name', 'fatherId']
+    required: ['title']
+  },
+  update: {
+    required: ['id']
   },
   delete: {
+    required: ['id']
+  },
+  info: {
     required: ['id']
   },
   schema: {
@@ -20,21 +26,12 @@ module.exports = {
       id: {
         type: 'integer'
       },
-      name: {
-        type: 'string',
-        maxLength: 255
-      },
-      fatherId: {
-        type: 'integer'
-      },
       belongCompany: {
         type: 'integer'
       },
-      updatedAt: {
-        type: 'string'
-      },
-      createdAt: {
-        type: 'string'
+      title: {
+        type: 'string',
+        maxLength: 255
       }
     }
   }
