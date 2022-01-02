@@ -11,6 +11,8 @@ const companyModel = require('~/models/company')
 const company = companyModel(sequelize)
 const pvLogModel = require('~/models/pvLog')
 const pvLog = pvLogModel(sequelize)
+const shareLogModel = require('~/models/shareLog')
+const shareLog = shareLogModel(sequelize)
 const tagsModel = require('~/models/tags')
 const tags = tagsModel(sequelize)
 const userModel = require('~/models/user')
@@ -43,6 +45,7 @@ module.exports = {
   activeType,
   company,
   pvLog,
+  shareLog,
   tags,
   user,
   wxuser

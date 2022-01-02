@@ -6,7 +6,7 @@ exports.create = async (ctx) => {
   try {
     const data = ctx.request.body
     await util.validator.check(schema, 'create', data)
-    ctx.body = await service.create(data, ctx)
+    ctx.body = await service.viewCreate(data, ctx)
   } catch (error) {
     ctx.body = util.format.errHandler(error)
   }

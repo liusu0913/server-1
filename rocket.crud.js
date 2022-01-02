@@ -31,9 +31,9 @@ if (mysql !== '') {
     },
     modules: [
       { // 管理端——用户
-        controller: 'admin/system/pvLog',
-        service: 'admin/pvLog',
-        table: 'pvLog',
+        controller: 'admin/system/shareLog',
+        service: 'admin/shareLog',
+        table: 'shareLog',
         validator: true
       }
     ],
