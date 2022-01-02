@@ -1,4 +1,4 @@
-const { pvLog, shareLog } = require('~/models')
+const { pvLog, shareLog, stayMsgLog } = require('~/models')
 const { Op } = require('sequelize')
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
@@ -48,6 +48,18 @@ module.exports = {
           }
         }
       })
+      const stayMsgList = await stayMsgLog.count({
+        attributes: ['company_id', 'job_id', 'open_id'],
+        group: ['company_id', 'job_id', 'open_id'],
+        distinct: true,
+        where: {
+          ...data,
+          belongCompany: session_user.belongCompany,
+          companyId: {
+            [Op.like]: `${ctx.session_user.companyId}%`
+          }
+        }
+      })
       const companyData = {}
       const list = []
       let pv = 0
@@ -68,6 +80,7 @@ module.exports = {
               openIds: [item.open_id]
             }
             companyData[item.company_id].shareData = getLogData('company_id', item.company_id, shareList)
+            companyData[item.company_id].stayMsgData = getLogData('company_id', item.company_id, stayMsgList)
           }
         } else if (type === 0) {
           if (companyData[item.job_id]) {
@@ -86,6 +99,7 @@ module.exports = {
               openIds: [item.open_id]
             }
             companyData[item.job_id].shareData = getLogData('job_id', item.job_id, shareList)
+            companyData[item.job_id].stayMsgData = getLogData('job_id', item.job_id, stayMsgList)
           }
         }
       })

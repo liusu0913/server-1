@@ -31,9 +31,9 @@ if (mysql !== '') {
     },
     modules: [
       { // 管理端——用户
-        controller: 'admin/system/shareLog',
-        service: 'admin/shareLog',
-        table: 'shareLog',
+        controller: 'admin/system/stayMsgLog',
+        service: 'admin/stayMsgLog',
+        table: 'stayMsgLog',
         validator: true
       }
     ],
