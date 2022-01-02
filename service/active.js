@@ -22,7 +22,7 @@ module.exports = {
           },
           required: false,
           include: [{
-            attributes: ['name'],
+            attributes: ['id', 'name'],
             model: tags,
             as: 'tag',
             where: {

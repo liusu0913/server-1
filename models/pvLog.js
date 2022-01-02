@@ -5,12 +5,12 @@ const {
 module.exports = sequelize => {
   const attributes = {
     id: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.INTEGER(11),
       allowNull: false,
       defaultValue: null,
       primaryKey: true,
       autoIncrement: true,
-      comment: "主键",
+      comment: null,
       field: "id"
     },
     activeId: {
@@ -19,110 +19,96 @@ module.exports = sequelize => {
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "活动id",
+      comment: "活动ID",
       field: "active_id"
     },
-    title: {
+    openId: {
       type: DataTypes.STRING(255),
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "活动标题",
-      field: "title"
+      comment: "微信openid",
+      field: "open_id"
     },
-    url: {
+    jobId: {
       type: DataTypes.STRING(255),
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "H5跳转链接",
-      field: "url"
+      comment: "员工的jobId",
+      field: "job_id"
     },
-    img: {
+    name: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "name"
+    },
+    companyId: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "员工所属机构",
+      field: "company_id"
+    },
+    company: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "company"
+    },
+    sourceOpenId: {
       type: DataTypes.STRING(255),
       allowNull: true,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "海报图片链接",
-      field: "img"
-    },
-    typeId: {
-      type: DataTypes.INTEGER(20),
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: "活动类型",
-      field: "type_id"
-    },
-    diffuseTypeId: {
-      type: DataTypes.INTEGER(20),
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: "活动触发的方式",
-      field: "diffuse_type_id"
-    },
-    startTime: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: "开始时间",
-      field: "start_time"
-    },
-    endTime: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: "结束时间",
-      field: "end_time"
+      comment: null,
+      field: "source_open_id"
     },
     belongCompany: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.INTEGER(11),
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "公司id",
+      comment: "该条数据所属哪个公司",
       field: "belong_company"
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
-      primaryKey: false,
-      autoIncrement: false,
-      comment: "创建时间",
-      field: "created_at"
     },
     updatedAt: {
       type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      allowNull: true,
+      defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "更新时间",
+      comment: null,
       field: "updated_at"
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "created_at"
     }
   };
   const options = {
-    tableName: "active",
+    tableName: "pvLog",
     comment: "",
-    indexes: [{
-      name: "uk_live_id",
-      unique: true,
-      type: "BTREE",
-      fields: ["active_id", "belong_company"]
-    }]
+    indexes: []
   };
-  const ActiveModel = sequelize.define("activeModel", attributes, options);
-  return ActiveModel;
+  const PvLogModel = sequelize.define("pvLogModel", attributes, options);
+  return PvLogModel;
 };

@@ -1,6 +1,6 @@
 const {
   DataTypes
-} = require('sequelize')
+} = require('sequelize');
 
 module.exports = sequelize => {
   const attributes = {
@@ -10,8 +10,8 @@ module.exports = sequelize => {
       defaultValue: null,
       primaryKey: true,
       autoIncrement: true,
-      comment: '主键',
-      field: 'id'
+      comment: "主键",
+      field: "id"
     },
     activeId: {
       type: DataTypes.STRING(255),
@@ -19,8 +19,8 @@ module.exports = sequelize => {
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: '活动id',
-      field: 'active_id'
+      comment: "活动id",
+      field: "active_id"
     },
     tagId: {
       type: DataTypes.BIGINT,
@@ -28,8 +28,8 @@ module.exports = sequelize => {
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: '标签id',
-      field: 'tag_id'
+      comment: "标签id",
+      field: "tag_id"
     },
     createdAt: {
       type: DataTypes.DATE,
@@ -37,8 +37,8 @@ module.exports = sequelize => {
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
       primaryKey: false,
       autoIncrement: false,
-      comment: '创建时间',
-      field: 'created_at'
+      comment: "创建时间",
+      field: "created_at"
     },
     updatedAt: {
       type: DataTypes.DATE,
@@ -46,8 +46,8 @@ module.exports = sequelize => {
       defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
       primaryKey: false,
       autoIncrement: false,
-      comment: '更新时间',
-      field: 'updated_at'
+      comment: "更新时间",
+      field: "updated_at"
     },
     belongCompany: {
       type: DataTypes.INTEGER(11),
@@ -56,19 +56,19 @@ module.exports = sequelize => {
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: 'belong_company'
+      field: "belong_company"
     }
-  }
+  };
   const options = {
-    tableName: 'activeTags',
-    comment: '',
+    tableName: "activeTags",
+    comment: "",
     indexes: [{
-      name: 'uk_live_id_tag_id',
+      name: "uk_live_id_tag_id",
       unique: true,
-      type: 'BTREE',
-      fields: ['active_id', 'tag_id', 'belong_company']
+      type: "BTREE",
+      fields: ["active_id", "tag_id", "belong_company"]
     }]
-  }
-  const ActiveTagsModel = sequelize.define('activeTagsModel', attributes, options)
-  return ActiveTagsModel
-}
+  };
+  const ActiveTagsModel = sequelize.define("activeTagsModel", attributes, options);
+  return ActiveTagsModel;
+};

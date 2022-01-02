@@ -1,6 +1,6 @@
 module.exports = {
   list: {
-    required: ['offset', 'count', 'fatherId']
+    required: ['offset', 'count']
   },
   create: {
     required: ['name', 'fatherId']

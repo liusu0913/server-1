@@ -31,9 +31,9 @@ if (mysql !== '') {
     },
     modules: [
       { // 管理端——用户
-        controller: 'admin/system/active',
-        service: 'admin/active',
-        table: 'active',
+        controller: 'admin/system/pvLog',
+        service: 'admin/pvLog',
+        table: 'pvLog',
         validator: true
       }
     ],
@@ -43,8 +43,27 @@ if (mysql !== '') {
         foreign: 'activeTags',
         relation: 'hasMany',
         options: {
-          sourceKey: 'active_id',
-          foreignKey: 'active_id'
+          sourceKey: 'activeId',
+          foreignKey: 'activeId',
+          as: 'tags'
+        }
+      }, {
+        source: 'active',
+        foreign: 'activeType',
+        relation: 'belongsTo',
+        options: {
+          sourceKey: 'id',
+          foreignKey: 'typeId',
+          as: 'type'
+        }
+      }, {
+        source: 'activeTags',
+        foreign: 'tags',
+        relation: 'belongsTo',
+        options: {
+          sourceKey: 'id',
+          foreignKey: 'tagId',
+          as: 'tag'
         }
       }
     ]
