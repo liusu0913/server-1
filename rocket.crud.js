@@ -31,9 +31,9 @@ if (mysql !== '') {
     },
     modules: [
       { // 管理端——用户
-        controller: 'admin/system/stayMsgLog',
-        service: 'admin/stayMsgLog',
-        table: 'stayMsgLog',
+        controller: 'admin/system/wxuser',
+        service: 'admin/wxuser',
+        table: 'wxuser',
         validator: true
       }
     ],

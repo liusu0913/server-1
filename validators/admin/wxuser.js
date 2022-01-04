@@ -1,10 +1,4 @@
 module.exports = {
-  activeData: {
-    required: [
-      'activeId',
-      'type'
-    ]
-  },
   list: {
     required: ['offset', 'count']
   },
@@ -12,26 +6,24 @@ module.exports = {
     required: [
       'activeId',
       'openId',
-      'jobId',
-      'stayTime',
+      'name',
+      'avatar',
+      'sourceJobId',
       'belongCompany'
     ]
   },
   update: {
-    required: ['id']
+    required: ['openId']
   },
   delete: {
-    required: ['id']
+    required: ['openId']
   },
   info: {
-    required: ['id']
+    required: ['openId']
   },
   schema: {
     type: 'object',
     properties: {
-      type: {
-        type: 'integer'
-      },
       offset: {
         type: 'integer'
       },
@@ -49,11 +41,15 @@ module.exports = {
         type: 'string',
         maxLength: 255
       },
-      jobId: {
+      name: {
         type: 'string',
         maxLength: 255
       },
-      companyId: {
+      avatar: {
+        type: 'string',
+        maxLength: 255
+      },
+      sourceJobId: {
         type: 'string',
         maxLength: 255
       },

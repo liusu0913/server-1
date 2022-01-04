@@ -1,13 +1,13 @@
-const { stayMsgLog } = require('~/models')
+const { wxuser } = require('~/models')
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
 
 module.exports = {
-  async list(data, ctx) {
+  async list (data, ctx) {
     try {
       const { session_user } = ctx
       data = util.format.dataProcessor(data)
-      const result = await stayMsgLog.findAndCountAll({
+      const result = await wxuser.findAndCountAll({
         ...data,
         where: {
           belongCompany: session_user.belongCompany
@@ -19,27 +19,25 @@ module.exports = {
       return util.format.errHandler(ex)
     }
   },
-  async create(data, ctx) {
+  async create (data) {
     try {
-      const { session_user } = ctx
-      if (session_user.role) {
-        data.belongCompany = session_user.belongCompany
-      }
-      const result = await stayMsgLog.create(data)
+      const result = await wxuser.create(data)
       return util.format.sucHandler(result)
     } catch (ex) {
       logger.error(`create|error:${ex.message}|stack:${ex.stack}`)
       return util.format.errHandler(ex)
     }
   },
-  async update(data, where = {}, ctx) {
+  async update (data, where = {}, ctx) {
     try {
-      const { session_user } = ctx
-      where = {
-        ...where,
-        belongCompany: session_user.belongCompany
+      if (where.belongCompany === undefined) {
+        const { session_user } = ctx
+        where = {
+          ...where,
+          belongCompany: session_user.belongCompany
+        }
       }
-      const [count = 0] = await stayMsgLog.update(data, { where })
+      const [count = 0] = await wxuser.update(data, { where })
       if (count > 0) {
         return util.format.sucHandler({ count })
       } else {
@@ -50,14 +48,14 @@ module.exports = {
       return util.format.errHandler(ex)
     }
   },
-  async delete(where, ctx) {
+  async delete (where, ctx) {
     try {
       const { session_user } = ctx
       where = {
         ...where,
         belongCompany: session_user.belongCompany
       }
-      const [count = 0] = await stayMsgLog.destroy({ where })
+      const [count = 0] = await wxuser.destroy({ where })
       if (count > 0) {
         return util.format.sucHandler({ count })
       } else {
@@ -68,14 +66,14 @@ module.exports = {
       return util.format.errHandler(ex)
     }
   },
-  async info(where, ctx) {
+  async info (where, ctx) {
     try {
       const { session_user } = ctx
       where = {
         ...where,
         belongCompany: session_user.belongCompany
       }
-      const result = await stayMsgLog.findOne({ where })
+      const result = await wxuser.findOne({ where })
       if (result) {
         return util.format.sucHandler(result)
       } else {

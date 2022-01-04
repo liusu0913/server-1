@@ -5,7 +5,7 @@ const {
 module.exports = sequelize => {
   const attributes = {
     id: {
-      type: DataTypes.INTEGER(10),
+      type: DataTypes.INTEGER(11),
       allowNull: false,
       defaultValue: null,
       primaryKey: true,
@@ -19,7 +19,7 @@ module.exports = sequelize => {
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "活动ID",
+      comment: null,
       field: "active_id"
     },
     openId: {
@@ -31,59 +31,14 @@ module.exports = sequelize => {
       comment: null,
       field: "open_id"
     },
-    name: {
+    jobId: {
       type: DataTypes.STRING(255),
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "name"
-    },
-    avatar: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "avatar"
-    },
-    phone: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: "手机号",
-      field: "phone"
-    },
-    content: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: "留资信息",
-      field: "content"
-    },
-    sourceJobId: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: "活动发出的员工ID",
-      field: "source_job_id"
-    },
-    sourceOpenId: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: "用户来自其他用户的分享",
-      field: "source_open_id"
+      field: "job_id"
     },
     belongCompany: {
       type: DataTypes.INTEGER(10),
@@ -93,6 +48,24 @@ module.exports = sequelize => {
       autoIncrement: false,
       comment: null,
       field: "belong_company"
+    },
+    stayTime: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "stay_time"
+    },
+    pageCount: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "page_count"
     },
     updatedAt: {
       type: DataTypes.DATE,
@@ -114,15 +87,10 @@ module.exports = sequelize => {
     }
   };
   const options = {
-    tableName: "wxuser",
+    tableName: "stayTimeLog",
     comment: "",
-    indexes: [{
-      name: "uk_open_id",
-      unique: true,
-      type: "BTREE",
-      fields: ["open_id", "name", "belong_company"]
-    }]
+    indexes: []
   };
-  const WxuserModel = sequelize.define("wxuserModel", attributes, options);
-  return WxuserModel;
+  const StayTimeLogModel = sequelize.define("stayTimeLogModel", attributes, options);
+  return StayTimeLogModel;
 };
