@@ -93,10 +93,9 @@ module.exports = {
           if (err) {
             resolve(util.format.errHandler(`${err.Code}:${err.Message}`))
           }
-          const { credentials } = res
           resolve({
             code: 0,
-            data: credentials,
+            data: res,
             message: 'success'
           })
         })

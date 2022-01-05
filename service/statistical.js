@@ -32,8 +32,27 @@ module.exports = {
           belongCompany: session_user.belongCompany
         }
       })
+      const addCount = await wxuser.count({
+        where: {
+          belongCompany: session_user.belongCompany,
+          createdAt: {
+            [Op.gte]: new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000)
+          }
+        }
+      })
       const phoneCount = await wxuser.count({
         where: {
+          phone: {
+            [Op.ne]: null
+          },
+          belongCompany: session_user.belongCompany
+        }
+      })
+      const addPhoneCount = await wxuser.count({
+        where: {
+          updatedAt: {
+            [Op.gte]: new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000)
+          },
           phone: {
             [Op.ne]: null
           },
@@ -44,7 +63,9 @@ module.exports = {
         code: 0,
         data: {
           allCount,
-          phoneCount
+          addCount,
+          phoneCount,
+          addPhoneCount
         },
         message: 'success'
       }
@@ -61,7 +82,16 @@ module.exports = {
           belongCompany: session_user.belongCompany
         }
       })
+      const addActiveCount = await active.count({
+        where: {
+          createdAt: {
+            [Op.gte]: new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000)
+          },
+          belongCompany: session_user.belongCompany
+        }
+      })
       let pv = 0
+      let addPv = 0
       const pvRes = await pvLog.count({
         attributes: ['open_id'],
         group: ['open_id'],
@@ -72,8 +102,29 @@ module.exports = {
       pvRes.forEach(item => {
         pv += item.count
       })
+      const addPvRes = await pvLog.count({
+        attributes: ['open_id'],
+        group: ['open_id'],
+        where: {
+          createdAt: {
+            [Op.gte]: new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000)
+          },
+          belongCompany: session_user.belongCompany
+        }
+      })
+      addPvRes.forEach(item => {
+        addPv += item.count
+      })
       const shareCount = await shareLog.count({
         where: {
+          belongCompany: session_user.belongCompany
+        }
+      })
+      const addShareCount = await shareLog.count({
+        where: {
+          createdAt: {
+            [Op.gte]: new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000)
+          },
           belongCompany: session_user.belongCompany
         }
       })
@@ -81,10 +132,13 @@ module.exports = {
         code: 0,
         data: {
           activeCount,
+          addActiveCount,
           pv,
+          addPv,
           uv: pvRes.length,
-          shareCount
-
+          addUv: addPvRes.length,
+          shareCount,
+          addShareCount
         },
         message: 'success'
       }
