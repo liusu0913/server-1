@@ -7,9 +7,11 @@ module.exports = {
     try {
       const { session_user } = ctx
       data = util.format.dataProcessor(data)
+      const { where } = data
       const result = await active.findAndCountAll({
         ...data,
         where: {
+          ...where,
           belongCompany: session_user.belongCompany
         },
         distinct: true,

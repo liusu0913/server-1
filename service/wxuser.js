@@ -1,6 +1,7 @@
 const { wxuser } = require('~/models')
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
+const { Op } = require('sequelize')
 
 module.exports = {
   async list (data, ctx) {

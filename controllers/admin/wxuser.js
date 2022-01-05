@@ -55,3 +55,13 @@ exports.info = async (ctx) => {
     ctx.body = util.format.errHandler(error)
   }
 }
+
+exports.data = async (ctx) => {
+  try {
+    const data = ctx.request.body
+    await util.validator.check(schema, 'data', data)
+    ctx.body = await service.data(data, ctx)
+  } catch (error) {
+    ctx.body = util.format.errHandler(error)
+  }
+}
