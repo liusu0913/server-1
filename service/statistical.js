@@ -160,18 +160,56 @@ module.exports = {
           belongCompany: session_user.belongCompany
         }
       })
-      const pvRes = await pvLog.count({
+      const pvData = {}
+      const uvData = {}
+      let pvList = []
+      let uvList = []
+      const viewRes = await pvLog.count({
+        attributes: ['active_id', 'open_id'],
+        group: ['active_id', 'open_id'],
+        where: searchRule
+      })
+      viewRes.forEach(item => {
+        if (pvData[item.active_id]) {
+          pvData[item.active_id].count += item.count
+          uvData[item.active_id].count += 1
+        } else {
+          pvData[item.active_id] = item
+          uvData[item.active_id] = {
+            active_id: item.active_id,
+            count: 1
+          }
+        }
+      })
+      Object.keys(pvData).forEach(key => {
+        pvList.push(pvData[key])
+      })
+      Object.keys(uvData).forEach(key => {
+        uvList.push(uvData[key])
+      })
+      const shareRes = await shareLog.count({
         attributes: ['active_id'],
         group: ['active_id'],
-        where: searchRule,
-        order: [['count', 'ASC']]
+        where: searchRule
       })
-      const { list } = formatData(pvRes, activeList)
+      const stayMsgRes = await stayMsgLog.count({
+        attributes: ['active_id'],
+        group: ['active_id'],
+        where: searchRule
+      })
+
+      pvList = formatData(pvList, activeList).list
+      uvList = formatData(uvList, activeList).list
+      const shareList = formatData(shareRes, activeList).list
+      const stayMsgList = formatData(stayMsgRes, activeList).list
 
       return {
         code: 0,
         data: {
-          list: list.sort((a, b) => b.count - a.count)
+          pvList: pvList.sort((a, b) => b.count - a.count),
+          uvList: uvList.sort((a, b) => b.count - a.count),
+          shareList: shareList.sort((a, b) => b.count - a.count),
+          stayMsgList: stayMsgList.sort((a, b) => b.count - a.count)
         },
         message: 'success'
       }
