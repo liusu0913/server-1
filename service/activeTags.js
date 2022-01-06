@@ -7,6 +7,7 @@ module.exports = {
     try {
       const { session_user } = ctx
       const { activeId, tagIds } = data
+      await this.delete({ activeId }, ctx)
       let count = 0
       let message = ''
       for (let i = 0; i < tagIds.length; i++) {
