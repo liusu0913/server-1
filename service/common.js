@@ -72,22 +72,37 @@ module.exports = {
       bucket,
       region
     }
+    var AppId = config.bucket.substr(config.bucket.lastIndexOf('-') + 1)
 
-    const scope = [{
-      action: 'name/cos:PutObject',
-      bucket: config.bucket,
-      region: config.region,
-      prefix: 'exampleobject'
-    }]
+    const policy = {
+      version: '2.0',
+      statement: [{
+        action: [
+          'name/cos:PutObject',
+          'name/cos:PostObject',
+          'name/cos:InitiateMultipartUpload',
+          'name/cos:ListMultipartUploads',
+          'name/cos:ListParts',
+          'name/cos:UploadPart',
+          'name/cos:CompleteMultipartUpload',
+          'name/cos:uploadFiles'
+        ],
+        effect: 'allow',
+        principal: { qcs: ['*'] },
+        resource: [
+          'qcs::cos:' + config.region + ':uid/' + AppId + ':' + config.bucket + '/*'
+        ]
+      }]
+    }
     return new Promise((resolve) => {
       try {
-        const policy = STS.getPolicy(scope)
+        // const policy = STS.getPolicy(scope)
         STS.getCredential({
           secretId: config.secretId,
           secretKey: config.secretKey,
           proxy: config.proxy,
           policy: policy,
-          allowPrefix,
+          // allowPrefix,
           durationSeconds
         }, function (err, res) {
           if (err) {
