@@ -31,9 +31,11 @@ module.exports = {
     try {
       const { session_user } = ctx
       data = util.format.dataProcessor(data)
+      const { where } = data
       const result = await user.findAndCountAll({
         ...data,
         where: {
+          ...where,
           companyId: {
             [op.like]: `${ctx.session_user.companyId}%`
           },
