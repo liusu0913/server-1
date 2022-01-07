@@ -31,9 +31,9 @@ if (mysql !== '') {
     },
     modules: [
       { // 管理端——用户
-        controller: 'admin/system/wxuser',
-        service: 'admin/wxuser',
-        table: 'wxuser',
+        controller: 'admin/system/activeRemind',
+        service: 'admin/activeRemind',
+        table: 'activeRemind',
         validator: true
       }
     ],

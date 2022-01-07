@@ -1,5 +1,5 @@
-const service = require('~/service/admin/tags')
-const schema = require('~/validators/admin/tags')
+const service = require('~/service/admin/activeRemind')
+const schema = require('~/validators/admin/activeRemind')
 const util = require('~/util')
 
 exports.list = async (ctx) => {
@@ -17,17 +17,6 @@ exports.create = async (ctx) => {
     const data = ctx.request.body
     await util.validator.check(schema, 'create', data)
     ctx.body = await service.create(data, ctx)
-  } catch (error) {
-    ctx.body = util.format.errHandler(error)
-  }
-}
-
-exports.delete = async (ctx) => {
-  try {
-    const data = ctx.request.body
-    const { id } = data
-    await util.validator.check(schema, 'delete', data)
-    ctx.body = await service.delete({ id }, ctx)
   } catch (error) {
     ctx.body = util.format.errHandler(error)
   }

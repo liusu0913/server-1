@@ -1,7 +1,7 @@
 const { pvLog, user, shareLog, stayMsgLog, questionLog, stayTimeLog } = require('~/models')
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
-const wxUser = require('./wxuser')
+const wxUser = require('../admin/wxuser')
 module.exports = {
   async viewCreate (data) {
     try {

@@ -6,21 +6,6 @@
     "auditLog": "log/.8e7c789ffb815636004d5408d7adb072b04f3782-audit.json",
     "files": [
         {
-            "date": 1640784359346,
-            "name": "log/koa-seed-20211229.log",
-            "hash": "d3af5fcfe6a25d8e9dbf342ecdc2e2df"
-        },
-        {
-            "date": 1640846219970,
-            "name": "log/koa-seed-20211230.log",
-            "hash": "836c16f4f5330ac31ad175787b466463"
-        },
-        {
-            "date": 1640918368082,
-            "name": "log/koa-seed-20211231.log",
-            "hash": "2377c6f94ab067ebfb41a416bd4c6eb0"
-        },
-        {
             "date": 1641103449243,
             "name": "log/koa-seed-20220102.log",
             "hash": "510e70ee0e113aae0b196a4052917e98"
@@ -39,6 +24,16 @@
             "date": 1641369216197,
             "name": "log/koa-seed-20220105.log",
             "hash": "a3fe3968669118c094c245d7cd3be995"
+        },
+        {
+            "date": 1641437267863,
+            "name": "log/koa-seed-20220106.log",
+            "hash": "8cbd9c2abdc46ecfe0c442ed673c2fac"
+        },
+        {
+            "date": 1641536483793,
+            "name": "log/koa-seed-20220107.log",
+            "hash": "2dbe9dd1e202eaf9b3f5cb636daf4337"
         }
     ]
 }

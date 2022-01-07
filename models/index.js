@@ -3,6 +3,8 @@ const activeModel = require('~/models/active')
 const active = activeModel(sequelize)
 const activeBiffuseModel = require('~/models/activeBiffuse')
 const activeBiffuse = activeBiffuseModel(sequelize)
+const activeRemindModel = require('~/models/activeRemind')
+const activeRemind = activeRemindModel(sequelize)
 const activeTagsModel = require('~/models/activeTags')
 const activeTags = activeTagsModel(sequelize)
 const activeTypeModel = require('~/models/activeType')
@@ -47,6 +49,7 @@ activeTags.belongsTo(tags, {
 module.exports = {
   active,
   activeBiffuse,
+  activeRemind,
   activeTags,
   activeType,
   company,

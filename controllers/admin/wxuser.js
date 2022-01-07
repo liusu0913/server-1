@@ -1,4 +1,4 @@
-const service = require('~/service/wxuser')
+const service = require('~/service/admin/wxuser')
 const schema = require('~/validators/admin/wxuser')
 const util = require('~/util')
 

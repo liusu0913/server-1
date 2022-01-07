@@ -1,4 +1,4 @@
-const service = require('~/service/statistical')
+const service = require('~/service/admin/statistical')
 const schema = require('~/validators/admin/statistical')
 const util = require('~/util')
 
