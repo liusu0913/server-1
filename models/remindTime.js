@@ -13,22 +13,13 @@ module.exports = sequelize => {
       comment: null,
       field: "id"
     },
-    activeId: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: "活动ID",
-      field: "active_id"
-    },
     jobId: {
       type: DataTypes.STRING(255),
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "工号",
+      comment: null,
       field: "job_id"
     },
     type: {
@@ -46,7 +37,7 @@ module.exports = sequelize => {
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "所属公司",
+      comment: null,
       field: "belong_company"
     },
     createdAt: {
@@ -69,10 +60,15 @@ module.exports = sequelize => {
     }
   };
   const options = {
-    tableName: "activeRemind",
+    tableName: "remindTime",
     comment: "",
-    indexes: []
+    indexes: [{
+      name: "uk_job_id",
+      unique: true,
+      type: "BTREE",
+      fields: ["job_id", "type"]
+    }]
   };
-  const ActiveRemindModel = sequelize.define("activeRemindModel", attributes, options);
-  return ActiveRemindModel;
+  const RemindTimeModel = sequelize.define("remindTimeModel", attributes, options);
+  return RemindTimeModel;
 };

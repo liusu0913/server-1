@@ -34,6 +34,11 @@
             "date": 1641536483793,
             "name": "log/koa-seed-20220107.log",
             "hash": "2dbe9dd1e202eaf9b3f5cb636daf4337"
+        },
+        {
+            "date": 1641624210472,
+            "name": "log/koa-seed-20220108.log",
+            "hash": "22b11c44a0ef252ceec7b39511636232"
         }
     ]
 }

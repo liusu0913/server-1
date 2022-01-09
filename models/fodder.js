@@ -13,32 +13,32 @@ module.exports = sequelize => {
       comment: null,
       field: "id"
     },
-    activeId: {
+    fodderId: {
       type: DataTypes.STRING(255),
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "活动ID",
-      field: "active_id"
+      comment: null,
+      field: "fodder_id"
     },
-    jobId: {
+    title: {
       type: DataTypes.STRING(255),
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "工号",
-      field: "job_id"
+      comment: null,
+      field: "title"
     },
-    type: {
-      type: DataTypes.INTEGER(11),
+    content: {
+      type: DataTypes.STRING(255),
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "提醒类型",
-      field: "type"
+      comment: null,
+      field: "content"
     },
     belongCompany: {
       type: DataTypes.INTEGER(11),
@@ -46,7 +46,7 @@ module.exports = sequelize => {
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "所属公司",
+      comment: null,
       field: "belong_company"
     },
     createdAt: {
@@ -69,10 +69,15 @@ module.exports = sequelize => {
     }
   };
   const options = {
-    tableName: "activeRemind",
+    tableName: "fodder",
     comment: "",
-    indexes: []
+    indexes: [{
+      name: "uk_fodder_id",
+      unique: true,
+      type: "BTREE",
+      fields: ["fodder_id", "belong_company"]
+    }]
   };
-  const ActiveRemindModel = sequelize.define("activeRemindModel", attributes, options);
-  return ActiveRemindModel;
+  const FodderModel = sequelize.define("fodderModel", attributes, options);
+  return FodderModel;
 };

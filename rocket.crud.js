@@ -31,9 +31,15 @@ if (mysql !== '') {
     },
     modules: [
       { // 管理端——用户
-        controller: 'admin/system/activeRemind',
-        service: 'admin/activeRemind',
-        table: 'activeRemind',
+        controller: 'test/fodder',
+        service: 'test/fodder',
+        table: 'fodder',
+        validator: true
+      },
+      { // 管理端——用户
+        controller: 'test/fodderTag',
+        service: 'test/fodderTag',
+        table: 'fodderTag',
         validator: true
       }
     ],
@@ -64,6 +70,15 @@ if (mysql !== '') {
           sourceKey: 'id',
           foreignKey: 'tagId',
           as: 'tag'
+        }
+      }, {
+        source: 'activeRemind',
+        foreign: 'active',
+        relation: 'hasOne',
+        options: {
+          sourceKey: 'activeId',
+          foreignKey: 'activeId',
+          as: 'active'
         }
       }
     ]
