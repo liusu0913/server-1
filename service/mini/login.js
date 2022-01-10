@@ -1,4 +1,4 @@
-const users = require('../user');
+const users = require('../admin/user');
 const redis = require('~/libs/redis');
 const {SECRET} = require("~/const");
 const jwt = require('jsonwebtoken');
