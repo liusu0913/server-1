@@ -26,14 +26,43 @@ const forMatXlsxData = (data) => {
 }
 
 module.exports = {
+  async allList (data, ctx) {
+    // 查找列表需要根据公司id的层级条件进行查找
+    try {
+      const { session_user } = ctx
+      const { role } = data
+      const result = await user.findAll({
+        ...data,
+        where: {
+          role,
+          companyId: {
+            [op.like]: `${ctx.session_user.companyId}%`
+          },
+          belongCompany: session_user.belongCompany
+        }
+      })
+      return {
+        code: 0,
+        data: {
+          list: result
+        },
+        message: 'success'
+      }
+    } catch (ex) {
+      logger.error(`list|error:${ex.message}|stack:${ex.stack}`)
+      return util.format.errHandler(ex)
+    }
+  },
   async list (data, ctx) {
     // 查找列表需要根据公司id的层级条件进行查找
     try {
       const { session_user } = ctx
       data = util.format.dataProcessor(data)
+      const { where } = data
       const result = await user.findAndCountAll({
         ...data,
         where: {
+          ...where,
           companyId: {
             [op.like]: `${ctx.session_user.companyId}%`
           },
@@ -78,7 +107,6 @@ module.exports = {
         ...where,
         belongCompany: session_user.belongCompany
       }
-      console.log(where)
       const [count = 0] = await user.update(data, { where })
       if (count > 0) {
         return util.format.sucHandler({ count })
@@ -155,7 +183,7 @@ module.exports = {
               returmMsg += `跳过工号为${userInfo.jobId}的员工信息录入；`
               continue
             } else {
-              const res = await that.update(userInfo, { jobId: userInfo.jobId })
+              const res = await that.update(userInfo, { jobId: userInfo.jobId }, ctx)
               if (res.code) {
                 returmMsg += `工号${userInfo.jobId}录入错误：${res.message}；`
               } else {

@@ -5,13 +5,7 @@ module.exports = {
   create: {
     required: ['name', 'fatherId']
   },
-  update: {
-    required: ['id']
-  },
   delete: {
-    required: ['id']
-  },
-  info: {
     required: ['id']
   },
   schema: {

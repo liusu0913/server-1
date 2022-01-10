@@ -31,22 +31,77 @@ if (mysql !== '') {
     },
     modules: [
       { // 管理端——用户
-        controller: 'admin/system/tags',
-        service: 'admin/tags',
-        table: 'tags',
+        controller: 'test/fodder',
+        service: 'test/fodder',
+        table: 'fodder',
         validator: true
       }
     ],
     associations: [
-      // {
-      //   source: 'admin_user',
-      //   foreign: 'admin_role',
-      //   relation: 'belongsTo',
-      //   options: {
-      //     sourceKey: 'id',
-      //     foreignKey: 'role_id'
-      //   }
-      // }
+      {
+        source: 'active',
+        foreign: 'activeTags',
+        relation: 'hasMany',
+        options: {
+          sourceKey: 'activeId',
+          foreignKey: 'activeId',
+          as: 'tags'
+        }
+      }, {
+        source: 'active',
+        foreign: 'activeType',
+        relation: 'belongsTo',
+        options: {
+          sourceKey: 'id',
+          foreignKey: 'typeId',
+          as: 'type'
+        }
+      }, {
+        source: 'activeTags',
+        foreign: 'tags',
+        relation: 'belongsTo',
+        options: {
+          sourceKey: 'id',
+          foreignKey: 'tagId',
+          as: 'tag'
+        }
+      }, {
+        source: 'activeRemind',
+        foreign: 'active',
+        relation: 'hasOne',
+        options: {
+          sourceKey: 'activeId',
+          foreignKey: 'activeId',
+          as: 'active'
+        }
+      }, {
+        source: 'activeTags',
+        foreign: 'active',
+        relation: 'hasOne',
+        options: {
+          sourceKey: 'activeId',
+          foreignKey: 'activeId',
+          as: 'active'
+        }
+      }, {
+        source: 'fodder',
+        foreign: 'fodderTag',
+        relation: 'hasMany',
+        options: {
+          sourceKey: 'fodderId',
+          foreignKey: 'fodderId',
+          as: 'tags'
+        }
+      }, {
+        source: 'fodderTag',
+        foreign: 'tags',
+        relation: 'belongsTo',
+        options: {
+          sourceKey: 'id',
+          foreignKey: 'tagId',
+          as: 'tag'
+        }
+      }
     ]
   }
 } else {

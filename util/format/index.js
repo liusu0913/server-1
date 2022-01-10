@@ -48,7 +48,7 @@ const sucHandler = (data = {}, type = '') => {
  * @param {object} data 数据库查询参数
  */
 const dataProcessor = (data = {}) => {
-  const { offset, count, order = [['id', 'DESC']] } = data
+  const { offset, count, order = [['updatedAt', 'DESC']] } = data
   delete data.offset
   delete data.count
   delete data.order
