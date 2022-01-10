@@ -16,16 +16,17 @@ module.exports = {
     logging: false
   },
   redis: {
-    host: '119.28.163.231',
-    port: 6379
+    host: '127.0.0.1',
+    port: 6379,
+    password: ''
   },
   third: {
     component_appid: 'XXXX',
     component_appsecret: 'XXXX'
   },
   mp: {
-    appid: 'XXXX',
-    secret: 'XXXX'
+    appid: 'wxa740aa4cf482d798',
+    secret: '78442db1117beb95b0d8166f7a7bceca'
   },
   serviceAccount: {
     appid: 'XXXX',
@@ -81,5 +82,6 @@ module.exports = {
     smsSdkAppid: 'xxxx', // 短信应用ID：在 [短信控制台] 添加应用后生成的实际 SDKAppID，例如1400006666
     sign: '腾讯科技', // 短信签名内容，必须填写已审核通过的签名
     templateId: '123456' // 短信模板ID
-  }
+  },
+  codeEx: 60,
 }

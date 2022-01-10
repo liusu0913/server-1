@@ -69,5 +69,17 @@ module.exports = {
         data
       }
     })
+  },
+  sendMsg: async (access_token, touser, template_id, data) => {
+    const url = `https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=${access_token}`
+    return await request({
+      url,
+      method: 'post',
+      data: {
+        touser,
+        template_id,
+        data
+      }
+    })
   }
 }

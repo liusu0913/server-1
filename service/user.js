@@ -126,6 +126,14 @@ module.exports = {
       return util.format.errHandler(ex)
     }
   },
+  async infoMini (where) {
+    try {
+      return await user.findOne({where});
+    } catch (ex) {
+      logger.error(`info|error:${ex.message}|stack:${ex.stack}`);
+      return null;
+    }
+  },
   async batchAdd ({ filePath, type, role, ctx }) {
     const that = this
     const workbook = await xlsx.readFile(filePath)
