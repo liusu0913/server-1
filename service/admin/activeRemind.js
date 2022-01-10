@@ -1,16 +1,37 @@
-const { activeRemind, remindTime, active } = require('~/models')
+const { activeRemind, remindTime, active, activeTags, tags } = require('~/models')
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
 const { Op } = require('sequelize')
+
+function forMatActiveData (active) {
+  const tags = []
+  active.tags.forEach((tag) => {
+    if (tag.tag) {
+      tags.push(tag.tag)
+    }
+  })
+  return {
+    activeId: active.activeId,
+    title: active.title,
+    url: active.url,
+    img: active.img,
+    tags,
+    type: active.type,
+    diffuseTypeId: active.diffuseTypeId,
+    startTime: active.startTime,
+    createdAt: active.createdAt,
+    updatedAt: active.updatedAt
+  }
+}
 
 async function getTime (where) {
   const res = await remindTime.findOne({
     where
   })
-  return res.updatedAt
+  return res ? res.updatedAt : 0
 }
 
-async function getRemindCount (where, time) {
+async function getRemindCount (where, time = 0) {
   const all = await activeRemind.count({
     where
   })
@@ -18,7 +39,7 @@ async function getRemindCount (where, time) {
     where: {
       ...where,
       updatedAt: {
-        [Op.gte]: time
+        [Op.gte]: time || 0
       }
     }
   })
@@ -32,6 +53,7 @@ module.exports = {
   async getMsgCount (ctx) {
     try {
       const { session_user } = ctx
+      console.log(session_user.jobId)
       const moreSendTime = await getTime({
         type: 1,
         jobId: session_user.jobId,
@@ -48,15 +70,19 @@ module.exports = {
         jobId: session_user.jobId,
         belongCompany: session_user.belongCompany
       })
-      const firend = await getRemindCount({
+      const friend = await getRemindCount({
         type: 2,
         jobId: session_user.jobId,
         belongCompany: session_user.belongCompany
       }, firendTime)
 
       return {
-        moreSend,
-        firend
+        code: 0,
+        data: {
+          moreSend,
+          friend
+        },
+        message: 'success'
       }
     } catch (ex) {
       logger.error(`update|error:${ex.message}|stack:${ex.stack}`)
@@ -90,7 +116,25 @@ module.exports = {
           as: 'active',
           where: {
             belongCompany: session_user.belongCompany
-          }
+          },
+          include: [{
+            attributes: ['tagId'],
+            model: activeTags,
+            as: 'tags',
+            where: {
+              belongCompany: session_user.belongCompany
+            },
+            required: false,
+            include: [{
+              attributes: ['id', 'name'],
+              model: tags,
+              as: 'tag',
+              where: {
+                belongCompany: session_user.belongCompany
+              },
+              required: false
+            }]
+          }]
         }]
       })
       const res = util.format.sucHandler(result, 'list')
@@ -103,7 +147,7 @@ module.exports = {
           newMsg = false
         }
         formatList.push({
-          active: item.active,
+          active: forMatActiveData(item.active),
           type: item.type,
           updatedAt: item.updatedAt,
           createdAt: item.createdAt,
@@ -114,11 +158,11 @@ module.exports = {
       return {
         code: res.code,
         data: {
-          list: formatList
+          list: formatList,
+          count: res.data.count
         },
-        count: res.count
+        message: 'success'
       }
-      return res
     } catch (ex) {
       logger.error(`list|error:${ex.message}|stack:${ex.stack}`)
       return util.format.errHandler(ex)

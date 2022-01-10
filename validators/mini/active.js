@@ -1,6 +1,9 @@
 module.exports = {
+  data: {
+    required: ['day']
+  },
   list: {
-    required: ['offset', 'count', 'tagId']
+    required: ['offset', 'count']
   },
   info: {
     required: ['activeId']
@@ -8,6 +11,9 @@ module.exports = {
   schema: {
     type: 'object',
     properties: {
+      day: {
+        type: 'integer'
+      },
       offset: {
         type: 'integer'
       },

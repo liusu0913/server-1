@@ -1,13 +1,14 @@
-const { active, tags, activeType, activeTags } = require('~/models')
+const { active, tags, activeType, activeTags, pvLog, shareLog, stayMsgLog } = require('~/models')
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
 const { Op } = require('sequelize')
 
-function forMatActiveData (active) {
+function forMatActiveData (active, uv, share, stayMsg) {
   const tags = []
-  console.log(active)
   active.tags.forEach((tag) => {
-    tags.push(tag.tag)
+    if (tag.tag) {
+      tags.push(tag.tag)
+    }
   })
   return {
     activeId: active.activeId,
@@ -15,6 +16,9 @@ function forMatActiveData (active) {
     url: active.url,
     img: active.img,
     tags,
+    uv,
+    share,
+    stayMsg,
     type: active.type,
     diffuseTypeId: active.diffuseTypeId,
     startTime: active.startTime,
@@ -24,6 +28,41 @@ function forMatActiveData (active) {
 }
 
 module.exports = {
+  async data (data, ctx) {
+    try {
+      const { session_user } = ctx
+      const { day } = data
+      const where = {
+        belongCompany: session_user.belongCompany
+      }
+      if (day) {
+        where.createdAt = {
+          [Op.gte]: new Date(new Date().getTime() - day * 24 * 60 * 60 * 1000)
+        }
+      }
+      const pv = await pvLog.count({
+        where
+      })
+      const share = await shareLog.count({
+        where
+      })
+      const shareRes = await shareLog.count({
+        group: ['active_id'],
+        where
+      })
+      return {
+        code: 0,
+        data: {
+          pv,
+          share,
+          shareActiveCount: shareRes.length
+        },
+        message: 'success'
+      }
+    } catch (error) {
+
+    }
+  },
   async list (data, ctx) {
     try {
       const { session_user } = ctx
@@ -71,7 +110,7 @@ module.exports = {
         const res = util.format.sucHandler(result, 'list')
         count = res.count
         res.data.list.forEach((item) => {
-          list.push(forMatActiveData(item))
+          list.push(forMatActiveData(item, session_user))
         })
       } else {
         data = util.format.dataProcessor(data)
@@ -120,18 +159,29 @@ module.exports = {
         })
         const res = util.format.sucHandler(result, 'list')
         count = res.count
-        res.data.list.forEach((item) => {
-          const { active } = item
-          list.push(forMatActiveData(active))
-        })
+        for (let i = 0; i < res.data.list.length; i++) {
+          const { active } = res.data.list[i]
+          const dataQuery = {
+            group: ['open_id'],
+            where: {
+              activeId: active.activeId,
+              belongCompany: session_user.belongCompany
+            }
+          }
+          const uvRes = await pvLog.count(dataQuery)
+          const shareRes = await shareLog.count(dataQuery)
+          const stayMsgRes = await stayMsgLog.count(dataQuery)
+          list.push(forMatActiveData(active, uvRes.length, shareRes.length, stayMsgRes.length))
+        }
       }
 
       return {
         code: 0,
         data: {
-          list
+          list,
+          count
         },
-        count
+        message: 'success'
       }
     } catch (ex) {
       logger.error(`list|error:${ex.message}|stack:${ex.stack}`)
