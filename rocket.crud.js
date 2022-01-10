@@ -35,12 +35,6 @@ if (mysql !== '') {
         service: 'test/fodder',
         table: 'fodder',
         validator: true
-      },
-      { // 管理端——用户
-        controller: 'test/fodderTag',
-        service: 'test/fodderTag',
-        table: 'fodderTag',
-        validator: true
       }
     ],
     associations: [
@@ -79,6 +73,33 @@ if (mysql !== '') {
           sourceKey: 'activeId',
           foreignKey: 'activeId',
           as: 'active'
+        }
+      }, {
+        source: 'activeTags',
+        foreign: 'active',
+        relation: 'hasOne',
+        options: {
+          sourceKey: 'activeId',
+          foreignKey: 'activeId',
+          as: 'active'
+        }
+      }, {
+        source: 'fodder',
+        foreign: 'fodderTag',
+        relation: 'hasMany',
+        options: {
+          sourceKey: 'fodderId',
+          foreignKey: 'fodderId',
+          as: 'tags'
+        }
+      }, {
+        source: 'fodderTag',
+        foreign: 'tags',
+        relation: 'belongsTo',
+        options: {
+          sourceKey: 'id',
+          foreignKey: 'tagId',
+          as: 'tag'
         }
       }
     ]

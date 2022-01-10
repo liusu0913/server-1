@@ -26,6 +26,33 @@ const forMatXlsxData = (data) => {
 }
 
 module.exports = {
+  async allList (data, ctx) {
+    // 查找列表需要根据公司id的层级条件进行查找
+    try {
+      const { session_user } = ctx
+      const { role } = data
+      const result = await user.findAll({
+        ...data,
+        where: {
+          role,
+          companyId: {
+            [op.like]: `${ctx.session_user.companyId}%`
+          },
+          belongCompany: session_user.belongCompany
+        }
+      })
+      return {
+        code: 0,
+        data: {
+          list: result
+        },
+        message: 'success'
+      }
+    } catch (ex) {
+      logger.error(`list|error:${ex.message}|stack:${ex.stack}`)
+      return util.format.errHandler(ex)
+    }
+  },
   async list (data, ctx) {
     // 查找列表需要根据公司id的层级条件进行查找
     try {

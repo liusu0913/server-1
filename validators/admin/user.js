@@ -1,7 +1,10 @@
 
 module.exports = {
+  allList: {
+    required: ['role']
+  },
   list: {
-    required: ['offset', 'count']
+    required: ['offset', 'count', 'role']
   },
   create: {
     required: [

@@ -58,6 +58,12 @@ activeRemind.hasOne(active, {
   as: 'active'
 })
 
+activeTags.hasOne(active, {
+  sourceKey: 'activeId',
+  foreignKey: 'activeId',
+  as: 'active'
+})
+
 fodder.hasMany(fodderTag, {
   sourceKey: 'fodderId',
   foreignKey: 'fodderId',

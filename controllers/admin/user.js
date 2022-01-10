@@ -2,6 +2,16 @@ const service = require('~/service/admin/user')
 const schema = require('~/validators/admin/user')
 const util = require('~/util')
 
+exports.allList = async (ctx) => {
+  try {
+    const data = ctx.request.body
+    await util.validator.check(schema, 'allList', data)
+    ctx.body = await service.allList(data, ctx)
+  } catch (error) {
+    ctx.body = util.format.errHandler(error)
+  }
+}
+
 exports.list = async (ctx) => {
   try {
     const data = ctx.request.body
