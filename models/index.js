@@ -69,6 +69,11 @@ fodder.hasMany(fodderTag, {
   foreignKey: 'fodderId',
   as: 'tags'
 })
+fodderTag.hasOne(fodder, {
+  sourceKey: 'fodderId',
+  foreignKey: 'fodderId',
+  as: 'fodder'
+})
 fodderTag.belongsTo(tags, {
   sourceKey: 'id',
   foreignKey: 'tagId',

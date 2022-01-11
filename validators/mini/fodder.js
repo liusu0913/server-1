@@ -1,15 +1,6 @@
 module.exports = {
   list: {
-    required: ['offset', 'count']
-  },
-  create: {
-    required: ['title', 'content', 'type']
-  },
-  update: {
-    required: ['fodderId']
-  },
-  delete: {
-    required: ['fodderId']
+    required: ['offset', 'count', 'type']
   },
   info: {
     required: ['fodderId']

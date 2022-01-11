@@ -40,6 +40,15 @@ module.exports = sequelize => {
       comment: null,
       field: "job_id"
     },
+    companyId: {
+      type: DataTypes.INTEGER(10),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "company_id"
+    },
     belongCompany: {
       type: DataTypes.INTEGER(10),
       allowNull: false,
