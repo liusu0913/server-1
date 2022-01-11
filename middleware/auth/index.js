@@ -11,10 +11,11 @@ module.exports = function (ignoreApi = []) {
     try {
       const res = await jwt.verify(ctx.header.authorization.slice(7), SECRET)
       if (res.role === 0 && data.belongCompany === undefined) {
-        return {
+        ctx.body = {
           code: 1002,
           message: '缺少必要参数：超级管理员创建用户，必须传递belongCompany'
         }
+        return
       }
       ctx.session_user = res
       await next()
