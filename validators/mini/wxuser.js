@@ -1,10 +1,19 @@
 module.exports = {
+  visitHistroy: {
+    required: ['openId', 'offset', 'count']
+  },
   info: {
     required: ['openId']
   },
   schema: {
     type: 'object',
     properties: {
+      offset: {
+        type: 'integer'
+      },
+      count: {
+        type: 'integer'
+      },
       openId: {
         type: 'string',
         maxLength: 255

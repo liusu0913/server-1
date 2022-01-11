@@ -64,6 +64,17 @@ activeTags.hasOne(active, {
   as: 'active'
 })
 
+pvLog.hasOne(active, {
+  sourceKey: 'activeId',
+  foreignKey: 'activeId',
+  as: 'active'
+})
+pvLog.hasOne(wxuser, {
+  sourceKey: 'sourceOpenId',
+  foreignKey: 'openId',
+  as: 'sourceUser'
+})
+
 fodder.hasMany(fodderTag, {
   sourceKey: 'fodderId',
   foreignKey: 'fodderId',

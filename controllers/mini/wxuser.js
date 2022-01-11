@@ -12,3 +12,13 @@ exports.info = async (ctx) => {
     ctx.body = util.format.errHandler(error)
   }
 }
+exports.visitHistroy = async (ctx) => {
+  try {
+    const data = ctx.request.body
+    const { openId } = data
+    await util.validator.check(schema, 'visitHistroy', data)
+    ctx.body = await service.visitHistroy(data, ctx)
+  } catch (error) {
+    ctx.body = util.format.errHandler(error)
+  }
+}

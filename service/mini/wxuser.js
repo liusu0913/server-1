@@ -1,4 +1,4 @@
-const { wxuser, pvLog, stayMsgLog } = require('~/models')
+const { wxuser, pvLog, active, stayMsgLog, questionLog, shareLog } = require('~/models')
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
 const { Op } = require('sequelize')
@@ -68,17 +68,115 @@ module.exports = {
 
       if (result) {
         const res = util.format.sucHandler(result)
+        const { openId, name, avatar, phone, content, sourceOpenId } = res.data
         return {
-          active: formatActive(pvList),
-          pvList,
-          res,
-          effectCount
+          code: res.code,
+          data: {
+            openId,
+            name,
+            avatar,
+            phone,
+            content,
+            sourceOpenId,
+            ...formatActive(pvList),
+            effectCount
+          },
+          message: res.message
         }
       } else {
         return util.format.errHandler('没有找到任何符合条件的记录!')
       }
     } catch (ex) {
       logger.error(`info|error:${ex.message}|stack:${ex.stack}`)
+      return util.format.errHandler(ex)
+    }
+  },
+  async visitHistroy (data, ctx) {
+    try {
+      const { session_user } = ctx
+      data = util.format.dataProcessor(data)
+      const { where } = data
+      const stayMsgActiveList = await stayMsgLog.findAll({
+        where: {
+          ...where,
+          belongCompany: session_user.belongCompany
+        }
+      })
+      const questionActiveList = await questionLog.findAll({
+        where: {
+          ...where,
+          belongCompany: session_user.belongCompany
+        }
+      })
+      const shareActiveList = await shareLog.findAll({
+        where: {
+          ...where,
+          belongCompany: session_user.belongCompany
+        }
+      })
+      const result = await pvLog.findAndCountAll({
+        ...data,
+        where: {
+          ...where,
+          belongCompany: session_user.belongCompany
+        },
+        distinct: true,
+        include: [{
+          attributes: ['title'],
+          model: active,
+          as: 'active',
+          where: {
+            belongCompany: session_user.belongCompany
+          },
+          required: false
+        }, {
+          attributes: ['name'],
+          model: wxuser,
+          as: 'sourceUser',
+          where: {
+            belongCompany: session_user.belongCompany
+          },
+          required: false
+        }]
+      })
+      const res = util.format.sucHandler(result, 'list')
+      const list = []
+      if (res.code === 0) {
+        res.data.list.forEach((item) => {
+          const tags = []
+          const stayMsg = stayMsgActiveList.filter(active => active.activeId === item.activeId)
+          const question = questionActiveList.filter(active => active.activeId === item.activeId)
+          const share = shareActiveList.filter(active => active.activeId === item.activeId)
+          if (stayMsg.length) {
+            tags.push('已留资')
+          }
+          if (question.length) {
+            tags.push('已参与')
+          }
+          if (share.length) {
+            tags.push('已分享')
+          }
+          list.push({
+            activeId: item.activeId,
+            active: item.active,
+            sourceOpenId: item.sourceOpenId,
+            sourceUser: item.sourceUser,
+            updatedAt: item.updatedAt,
+            tags
+          })
+        })
+      }
+
+      return {
+        code: res.code,
+        data: {
+          list,
+          count: res.data.count
+        },
+        message: res.message
+      }
+    } catch (ex) {
+      logger.error(`list|error:${ex.message}|stack:${ex.stack}`)
       return util.format.errHandler(ex)
     }
   }
