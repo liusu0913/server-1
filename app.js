@@ -30,7 +30,7 @@ app.use(views(`${__dirname}/views`, {
 }))
 
 app.use(Middles.apiLog)
-app.use(Middles.auth(['/common/login']))
+app.use(Middles.auth(['/common/login', '/admin/company/list']))
 app.use(Middles.router(app, { root: './controllers', ignore: ['third'] }))
 
 // error-handling
