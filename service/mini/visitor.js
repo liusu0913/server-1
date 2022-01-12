@@ -6,6 +6,7 @@ module.exports = {
     const {session_user} = ctx;
     const jobId = session_user.jobId;
     const belongCompany = session_user.belongCompany;
+    const companyId = session_user.companyId + '%';
     const date = new Date();
     const today = date.toISOString().slice(0, 10);
     date.setDate(date.getDate() - 1);
@@ -14,11 +15,12 @@ module.exports = {
                                           from pvLog
                                           where job_id = ?
                                             and belong_company = ?
+                                            and company_id like ?
                                             and (date (updated_at) = ?
                                              or date (updated_at) = ?)
                                           group by date (updated_at)`,
       {
-        replacements: [jobId, belongCompany, today, yesterday],
+        replacements: [jobId, belongCompany, companyId, today, yesterday],
         type: QueryTypes.SELECT
       });
     const data = {
@@ -43,23 +45,25 @@ module.exports = {
     const {session_user} = ctx;
     const jobId = session_user.jobId;
     const belongCompany = session_user.belongCompany;
+    const companyId = session_user.companyId + '%';
     const today = new Date().toISOString().slice(0, 10);
     // mysql5.7没有窗口函数RANK()，此处使用变量实现RANK()
     const result = await sequelize.query(`select rank
                                           from (select a.*,
                                                        @rowNumber := @rowNumber + 1, @rank := if(@curUV = a.uv,
-                                          @rank, @rowNumber) AS rank, @curUV := a.uv
+                                          @rank, @rowNumber) as rank, @curUV := a.uv
                                                 from
                                                     (select job_id, count (distinct open_id) as uv
                                                     from pvLog
                                                     where belong_company = ?
+                                                    and company_id like ?
                                                     and date (updated_at) = ?
                                                     group by job_id
                                                     order by uv desc) a,
                                                     (select @rank := 0, @rowNumber := 0, @curUV := null) r) b
                                           where job_id = ?`,
       {
-        replacements: [belongCompany, today, jobId],
+        replacements: [belongCompany, companyId, today, jobId],
         type: QueryTypes.SELECT
       });
     const data = {rank: result.length === 0 ? 0 : parseInt(result[0].rank)}
