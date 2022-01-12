@@ -51,6 +51,35 @@ module.exports = {
         belongCompany: session_user.belongCompany
       }
       const result = await wxuser.findOne({ where })
+      // pv*0.2+留资个数*10+答题测试个数*5
+      const rankQueryData = {
+        group: ['open_id'],
+        where: {
+          belongCompany: session_user.belongCompany
+        }
+      }
+      const pvRank = await pvLog.count(rankQueryData)
+      const stayMsgRank = await stayMsgLog.count(rankQueryData)
+      const questionRank = await questionLog.count(rankQueryData)
+      const rank = []
+      pvRank.forEach((item) => {
+        const stayMsg = stayMsgRank.filter((user) => user.open_id === item.open_id)
+        let stayMsgCount = 0
+        if (stayMsg.length) {
+          stayMsgCount = stayMsg[0].count
+        }
+        const question = questionRank.filter((user) => user.open_id === item.open_id)
+        let questionCount = 0
+        if (question.length) {
+          questionCount = question[0].count
+        }
+        rank.push({
+          openId: item.open_id,
+          count: Math.floor((item.count * 0.2 + stayMsgCount * 10 + questionCount * 5) * 100) / 100
+        })
+      })
+      rank.sort((a, b) => b.count - a.count)
+      const index = rank.findIndex(item => item.openId === where.openId)
       const effectCount = await pvLog.count({
         where: {
           belongCompany: session_user.belongCompany,
@@ -65,13 +94,13 @@ module.exports = {
           }
         }
       })
-
       if (result) {
         const res = util.format.sucHandler(result)
         const { openId, name, avatar, phone, content, sourceOpenId } = res.data
         return {
           code: res.code,
           data: {
+            finer: Math.floor(((rank.length - index) / rank.length) * 100),
             openId,
             name,
             avatar,

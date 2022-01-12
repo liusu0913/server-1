@@ -85,6 +85,15 @@ module.exports = sequelize => {
       comment: null,
       field: "status"
     },
+    avatar: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "avatar"
+    },
     openId: {
       type: DataTypes.STRING(255),
       allowNull: true,
