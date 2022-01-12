@@ -4,7 +4,7 @@ module.exports = {
       limit: {
         type: 'integer',
       },
-      offset: {
+      count: {
         type: 'integer',
       }
     },

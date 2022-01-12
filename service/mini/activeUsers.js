@@ -3,7 +3,7 @@ const {QueryTypes} = require('sequelize');
 
 module.exports = {
   async recommend(body, ctx) {
-    const limit = body.limit
+    const limit = body.count
     const offset = body.offset
     const {session_user} = ctx;
     const jobId = session_user.jobId;
@@ -47,7 +47,7 @@ module.exports = {
   },
 
   async regular(body, ctx) {
-    const limit = body.limit
+    const limit = body.count
     const offset = body.offset
     const {session_user} = ctx;
     const jobId = session_user.jobId;
@@ -80,7 +80,7 @@ module.exports = {
   },
 
   async share(body, ctx) {
-    const limit = body.limit
+    const limit = body.count
     const offset = body.offset
     const {session_user} = ctx;
     const jobId = session_user.jobId;
