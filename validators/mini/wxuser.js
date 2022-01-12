@@ -1,4 +1,7 @@
 module.exports = {
+  list: {
+    required: ['offset', 'count']
+  },
   visitHistroy: {
     required: ['openId', 'offset', 'count']
   },

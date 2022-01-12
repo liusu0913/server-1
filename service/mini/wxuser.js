@@ -43,6 +43,49 @@ function formatActive (pvList) {
 }
 
 module.exports = {
+  async list (data, ctx) {
+    try {
+      const { session_user } = ctx
+      const { search } = data
+      delete data.search
+      data = util.format.dataProcessor(data)
+      const queryWhere = {
+        belongCompany: session_user.belongCompany
+      }
+      if (search) {
+        queryWhere.name = {
+          [Op.like]: `%${search}%`
+        }
+      }
+      const result = await wxuser.findAndCountAll({
+        ...data,
+        where: queryWhere,
+        distinct: true,
+        include: [{
+          attributes: ['openId', 'updatedAt', 'activeId'],
+          model: pvLog,
+          limit: 1,
+          where: {
+            belongCompany: session_user.belongCompany
+          },
+          order: [['updatedAt', 'DESC']],
+          as: 'record',
+          include: [{
+            attributes: ['title'],
+            model: active,
+            where: {
+              belongCompany: session_user.belongCompany
+            },
+            as: 'active'
+          }]
+        }]
+      })
+      return util.format.sucHandler(result, 'list')
+    } catch (ex) {
+      logger.error(`list|error:${ex.message}|stack:${ex.stack}`)
+      return util.format.errHandler(ex)
+    }
+  },
   async info (where, ctx) {
     try {
       const { session_user } = ctx
