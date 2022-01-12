@@ -1,40 +1,32 @@
 module.exports = {
-  list: {
-    required: ['offset', 'count']
-  },
-  create: {
-    required: ['title', 'content', 'type']
-  },
-  update: {
-    required: ['fodderId']
-  },
-  delete: {
-    required: ['fodderId']
+  visitHistroy: {
+    required: ['openId', 'offset', 'count']
   },
   info: {
-    required: ['fodderId']
+    required: ['openId']
   },
   schema: {
     type: 'object',
     properties: {
-      type: {
-        type: 'integer'
-      },
       offset: {
         type: 'integer'
       },
       count: {
         type: 'integer'
       },
-      fodderId: {
+      openId: {
         type: 'string',
         maxLength: 255
       },
-      title: {
+      name: {
         type: 'string',
         maxLength: 255
       },
-      content: {
+      avatar: {
+        type: 'string',
+        maxLength: 255
+      },
+      sourceJobId: {
         type: 'string',
         maxLength: 255
       },

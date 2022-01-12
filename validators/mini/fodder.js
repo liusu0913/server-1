@@ -1,17 +1,14 @@
 module.exports = {
-  data: {
-    required: ['day']
-  },
   list: {
-    required: ['offset', 'count']
+    required: ['offset', 'count', 'type']
   },
   info: {
-    required: ['activeId']
+    required: ['fodderId']
   },
   schema: {
     type: 'object',
     properties: {
-      day: {
+      type: {
         type: 'integer'
       },
       offset: {
@@ -20,7 +17,7 @@ module.exports = {
       count: {
         type: 'integer'
       },
-      activeId: {
+      fodderId: {
         type: 'string',
         maxLength: 255
       },
@@ -28,27 +25,12 @@ module.exports = {
         type: 'string',
         maxLength: 255
       },
-      url: {
+      content: {
         type: 'string',
         maxLength: 255
       },
-      typeId: {
-        type: 'integer'
-      },
-      diffuseTypeId: {
-        type: 'integer'
-      },
-      startTime: {
-        type: 'string'
-      },
       belongCompany: {
         type: 'integer'
-      },
-      createdAt: {
-        type: 'string'
-      },
-      updatedAt: {
-        type: 'string'
       }
     }
   }

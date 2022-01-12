@@ -1,16 +1,6 @@
-const service = require('~/service/mini/active')
-const schema = require('~/validators/mini/active')
+const service = require('~/service/mini/fodder')
+const schema = require('~/validators/mini/fodder')
 const util = require('~/util')
-
-exports.data = async (ctx) => {
-  try {
-    const data = ctx.request.body
-    await util.validator.check(schema, 'data', data)
-    ctx.body = await service.data(data, ctx)
-  } catch (error) {
-    ctx.body = util.format.errHandler(error)
-  }
-}
 
 exports.list = async (ctx) => {
   try {
@@ -25,9 +15,9 @@ exports.list = async (ctx) => {
 exports.info = async (ctx) => {
   try {
     const data = ctx.request.body
-    const { activeId } = data
+    const { fodderId } = data
     await util.validator.check(schema, 'info', data)
-    ctx.body = await service.info({ activeId }, ctx)
+    ctx.body = await service.info({ fodderId }, ctx)
   } catch (error) {
     ctx.body = util.format.errHandler(error)
   }

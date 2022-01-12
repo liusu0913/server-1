@@ -67,6 +67,15 @@ module.exports = sequelize => {
       comment: null,
       field: "company_id"
     },
+    role: {
+      type: DataTypes.INTEGER(10),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "role"
+    },
     status: {
       type: DataTypes.ENUM('0', '1'),
       allowNull: true,
@@ -76,14 +85,14 @@ module.exports = sequelize => {
       comment: null,
       field: "status"
     },
-    role: {
-      type: DataTypes.INTEGER(10),
-      allowNull: false,
+    openId: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
       comment: null,
-      field: "role"
+      field: "open_id"
     },
     belongCompany: {
       type: DataTypes.INTEGER(10),
