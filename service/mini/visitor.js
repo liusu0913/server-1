@@ -11,6 +11,20 @@ module.exports = {
     const today = date.toISOString().slice(0, 10);
     date.setDate(date.getDate() - 1);
     const yesterday = date.toISOString().slice(0, 10);
+    const total = await sequelize.query(`select count(distinct open_id) as uv
+                                         from pvLog
+                                         where job_id = ?
+                                           and belong_company = ?
+                                           and company_id like ?`,
+      {
+        replacements: [jobId, belongCompany, companyId],
+        type: QueryTypes.SELECT
+      });
+    const data = {
+      total: total[0].uv,
+      today: 0,
+      yesterday: 0
+    }
     const result = await sequelize.query(`select date (updated_at) as date, count (distinct open_id) as uv
                                           from pvLog
                                           where job_id = ?
@@ -23,10 +37,6 @@ module.exports = {
         replacements: [jobId, belongCompany, companyId, today, yesterday],
         type: QueryTypes.SELECT
       });
-    const data = {
-      today: 0,
-      yesterday: 0
-    }
     for (const v of result) {
       if (v.date === today) {
         data.today = v.uv
