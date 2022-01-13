@@ -7,21 +7,26 @@ module.exports = {
     hostname: 'localhost'
   },
   mysql: {
-    database: 'db name',
+    host: '119.28.163.231',
+    port: 6000,
     username: 'root',
-    password: '********',
+    password: 'Zym123,.',
+    database: 'maikaiying',
     dialect: 'mysql',
-    host: 'host address',
-    port: 1,
     logging: false
+  },
+  redis: {
+    host: '127.0.0.1',
+    port: 6379,
+    password: ''
   },
   third: {
     component_appid: 'XXXX',
     component_appsecret: 'XXXX'
   },
   mp: {
-    appid: 'XXXX',
-    secret: 'XXXX'
+    appid: 'wxa740aa4cf482d798',
+    secret: '78442db1117beb95b0d8166f7a7bceca'
   },
   serviceAccount: {
     appid: 'XXXX',
