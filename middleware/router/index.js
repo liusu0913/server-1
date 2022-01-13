@@ -88,7 +88,7 @@ const setRoute = (app, config, options) => {
   const paths = []
   const ctrlpath = config.ctrlpath.join('/')
   // 加入当前路由
-  paths.push(ctrlpath)
+  paths.push(`/api${ctrlpath}`)
   // 如果当前路由配置方案为不跳转，则设置路由'/'为options.defaultPath路由
   if (options.defaultJump === false && ctrlpath === options.defaultPath) {
     paths.push('/')
