@@ -1,5 +1,7 @@
 const sequelize = require('~/libs/db');
-const {QueryTypes} = require('sequelize');
+const {QueryTypes, Op} = require('sequelize');
+const users = require('../admin/user');
+const {wxuser, pvLog, active} = require('~/models');
 
 module.exports = {
   async recommend(body, ctx) {
@@ -19,7 +21,7 @@ module.exports = {
                                          from (select open_id
                                                from stayTimeLog` + where +
       `group by open_id having sum(stay_time) > 30 union select open_id from questionLog` + where +
-      `union select source_open_id from pvLog` + where + `) a`,
+      `union select source_open_id from pvLog` + where + `) a left join wxuser b on a.open_id = b.open_id where b.open_id is not null`,
       {
         replacements: [jobId, belongCompany, companyId, sevenDaysAgo, jobId, belongCompany, companyId, sevenDaysAgo,
           jobId, belongCompany, companyId, thirtyDaysAgo],
@@ -28,16 +30,45 @@ module.exports = {
     const data = {
       total: total[0].total
     }
-    const result = await sequelize.query(`select b.*
+    const openID = await sequelize.query(`select a.open_id as open_id
                                           from (select open_id
                                                 from stayTimeLog` + where +
       `group by open_id having sum(stay_time) > 30 union select open_id from questionLog` + where +
-      `union select source_open_id from pvLog` + where + `limit ? offset ?) a join wxuser b on a.open_id = b.open_id`,
+      `union select source_open_id from pvLog` + where + `) a left join wxuser b on a.open_id = b.open_id where b.open_id is not null limit ? offset ?`,
       {
         replacements: [jobId, belongCompany, companyId, sevenDaysAgo, jobId, belongCompany, companyId, sevenDaysAgo,
           jobId, belongCompany, companyId, thirtyDaysAgo, limit, offset],
         type: QueryTypes.SELECT
       });
+    const openIDs = [];
+    for (const v of openID) {
+      openIDs.push(v.open_id)
+    }
+    const result = await wxuser.findAll({
+      where: {
+        open_id: {
+          [Op.in]: openIDs,
+        }
+      },
+      include: [{
+        attributes: ['openId', 'updatedAt', 'activeId'],
+        model: pvLog,
+        limit: 1,
+        where: {
+          belongCompany: session_user.belongCompany
+        },
+        order: [['updatedAt', 'DESC']],
+        as: 'record',
+        include: [{
+          attributes: ['title'],
+          model: active,
+          where: {
+            belongCompany: session_user.belongCompany
+          },
+          as: 'active'
+        }]
+      }]
+    })
     data.users = result
     return {
       code: 0,
@@ -54,8 +85,9 @@ module.exports = {
     const belongCompany = session_user.belongCompany;
     const companyId = session_user.companyId + '%';
     const where = ` where job_id = ? and belong_company = ? and company_id like ? `
-    const total = await sequelize.query(`select count(distinct open_id) as total
-                                         from stayMsgLog` + where,
+    const total = await sequelize.query(`select count(*) as total
+                                         from (select distinct open_id from stayMsgLog` + where +
+      `) a left join wxuser b on a.open_id = b.open_id where b.open_id is not null`,
       {
         replacements: [jobId, belongCompany, companyId],
         type: QueryTypes.SELECT
@@ -63,14 +95,43 @@ module.exports = {
     const data = {
       total: total[0].total
     }
-    const result = await sequelize.query(`select b.*
+    const openID = await sequelize.query(`select b.*
                                           from (select distinct open_id
                                                 from stayMsgLog` + where +
-      `limit ? offset ?) a join wxuser b on a.open_id = b.open_id`,
+      `) a join wxuser b on a.open_id = b.open_id where b.open_id is not null limit ? offset ?`,
       {
         replacements: [jobId, belongCompany, companyId, limit, offset],
         type: QueryTypes.SELECT
       });
+    const openIDs = [];
+    for (const v of openID) {
+      openIDs.push(v.open_id)
+    }
+    const result = await wxuser.findAll({
+      where: {
+        open_id: {
+          [Op.in]: openIDs,
+        }
+      },
+      include: [{
+        attributes: ['openId', 'updatedAt', 'activeId'],
+        model: pvLog,
+        limit: 1,
+        where: {
+          belongCompany: session_user.belongCompany
+        },
+        order: [['updatedAt', 'DESC']],
+        as: 'record',
+        include: [{
+          attributes: ['title'],
+          model: active,
+          where: {
+            belongCompany: session_user.belongCompany
+          },
+          as: 'active'
+        }]
+      }]
+    })
     data.users = result
     return {
       code: 0,
@@ -91,27 +152,57 @@ module.exports = {
     const sevenDaysAgo = date.toISOString().slice(0, 10);
     const where = ` where job_id = ? and belong_company = ? and company_id like ? and source_open_id != ? `
     const whereWithDate = where + ` and date (updated_at) > ? `
+    const openID = await users.infoMini({jobId, belongCompany})
     const total = await sequelize.query(`select count(*) as total
                                          from (select source_open_id
                                                from pvLog` + whereWithDate +
       `group by source_open_id having count(*) > 2 union (select source_open_id from pvLog` + where +
-      `and open_id in (select distinct open_id from stayMsgLog))) a`,
+      `and open_id in (select distinct open_id from stayMsgLog))) a left join wxuser b on a.source_open_id = b.open_id where b.open_id is not null`,
       {
-        replacements: [jobId, belongCompany, companyId, null, sevenDaysAgo, jobId, belongCompany, companyId, null],
+        replacements: [jobId, belongCompany, companyId, openID.openId, sevenDaysAgo, jobId, belongCompany, companyId, openID.openId],
         type: QueryTypes.SELECT
       });
     const data = {
       total: total[0].total
     }
-    const result = await sequelize.query(`select b.*
-                                          from (select source_open_id
-                                                from pvLog` + whereWithDate +
+    const openIDRes = await sequelize.query(`select b.*
+                                             from (select source_open_id
+                                                   from pvLog` + whereWithDate +
       `group by source_open_id having count(*) > 2 union (select source_open_id from pvLog` + where +
-      `and open_id in (select distinct open_id from stayMsgLog)) limit ? offset ?) a join wxuser b on a.source_open_id = b.open_id`,
+      `and open_id in (select distinct open_id from stayMsgLog))) a left join wxuser b on a.source_open_id = b.open_id where b.open_id is not null limit ? offset ?`,
       {
-        replacements: [jobId, belongCompany, companyId, null, sevenDaysAgo, jobId, belongCompany, companyId, null, limit, offset],
+        replacements: [jobId, belongCompany, companyId, openID.openId, sevenDaysAgo, jobId, belongCompany, companyId, openID.openId, limit, offset],
         type: QueryTypes.SELECT
       });
+    const openIDs = [];
+    for (const v of openIDRes) {
+      openIDs.push(v.open_id)
+    }
+    const result = await wxuser.findAll({
+      where: {
+        open_id: {
+          [Op.in]: openIDs,
+        }
+      },
+      include: [{
+        attributes: ['openId', 'updatedAt', 'activeId'],
+        model: pvLog,
+        limit: 1,
+        where: {
+          belongCompany: session_user.belongCompany
+        },
+        order: [['updatedAt', 'DESC']],
+        as: 'record',
+        include: [{
+          attributes: ['title'],
+          model: active,
+          where: {
+            belongCompany: session_user.belongCompany
+          },
+          as: 'active'
+        }]
+      }]
+    })
     data.users = result
     return {
       code: 0,

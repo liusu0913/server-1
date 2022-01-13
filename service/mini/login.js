@@ -2,6 +2,7 @@ const users = require('../admin/user');
 const redis = require('~/libs/redis');
 const {SECRET} = require("~/const");
 const jwt = require('jsonwebtoken');
+const mpOpenID = require('~/libs/weixin/login')
 
 module.exports = {
   async sendSms(body, ctx) {
@@ -64,5 +65,16 @@ module.exports = {
       },
       message: 'success'
     }
+  },
+  async updateOpenID(body, ctx) {
+    const jobId = body.jobId;
+    const phone = body.phone;
+    const code = body.code;
+    const code2Session = mpOpenID.login(global.config.mp.appid, global.config.mp.secret, code);
+    if (code2Session.errcode !== 0) {
+      throw new Error("微信获取openID错误");
+    }
+    const openID = code2Session.openid;
+    return await users.update({open_id: openID}, {jobId, phone}, ctx);
   }
 }

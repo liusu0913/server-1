@@ -21,3 +21,13 @@ exports.login = async (ctx) => {
     ctx.body = util.format.errHandler(error);
   }
 }
+
+exports.updateOpenID = async (ctx) => {
+  try {
+    const data = ctx.request.body;
+    await util.validator.check(schema, 'updateOpenID', data);
+    ctx.body = await service.updateOpenID(data, ctx);
+  } catch (error) {
+    ctx.body = util.format.errHandler(error);
+  }
+}

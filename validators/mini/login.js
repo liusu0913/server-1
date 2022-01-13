@@ -17,4 +17,7 @@ module.exports = {
       },
     },
   },
+  updateOpenID: {
+    required: ['jobId', 'phone', 'code'],
+  },
 }
