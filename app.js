@@ -30,7 +30,13 @@ app.use(views(`${__dirname}/views`, {
 }))
 
 app.use(Middles.apiLog)
-app.use(Middles.auth(['/api/common/login', '/api/mini/login/sendSms', '/api/mini/login/login', '/api/admin/company/list', '/api/mini/common/getUnionid']))
+app.use(Middles.auth([
+  '/api/common/login',
+  '/api/mini/login/sendSms',
+  '/api/mini/login/login',
+  '/api/admin/company/list',
+  '/api/mini/common/getUnionid'
+]))
 app.use(Middles.router(app, { root: './controllers', ignore: ['third'] }))
 
 // error-handling

@@ -54,7 +54,7 @@ module.exports = {
         ...where,
         belongCompany: session_user.belongCompany
       }
-      const [count = 0] = await remindTime.destroy({ where })
+      const count = await remindTime.destroy({ where })
       if (count > 0) {
         return util.format.sucHandler({ count })
       } else {

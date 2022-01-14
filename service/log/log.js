@@ -1,4 +1,4 @@
-const { pvLog, user, shareLog, stayMsgLog, questionLog, stayTimeLog } = require('~/models')
+const { pvLog, wxuser, user, shareLog, stayMsgLog, questionLog, stayTimeLog } = require('~/models')
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
 const wxUser = require('../admin/wxuser')

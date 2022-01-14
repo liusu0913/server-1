@@ -56,7 +56,7 @@ module.exports = {
         ...where,
         belongCompany: session_user.belongCompany
       }
-      const [count = 0] = await wxuser.destroy({ where })
+      const count = await wxuser.destroy({ where })
       if (count > 0) {
         return util.format.sucHandler({ count })
       } else {

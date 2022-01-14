@@ -1,5 +1,5 @@
-const service = require('~/service/admin/user')
-const schema = require('~/validators/admin/user')
+const service = require('~/service/mini/user')
+const schema = require('~/validators/mini/user')
 const util = require('~/util')
 
 exports.info = async (ctx) => {
@@ -22,9 +22,7 @@ exports.update = async (ctx) => {
   try {
     const data = ctx.request.body
     await util.validator.check(schema, 'update', data)
-    const { jobId } = data
-    delete data.jobId
-    ctx.body = await service.update(data, { jobId }, ctx)
+    ctx.body = await service.update(data, ctx)
   } catch (error) {
     ctx.body = util.format.errHandler(error)
   }

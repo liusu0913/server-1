@@ -6,26 +6,6 @@
     "auditLog": "log/.8e7c789ffb815636004d5408d7adb072b04f3782-audit.json",
     "files": [
         {
-            "date": 1641264271784,
-            "name": "log/koa-seed-20220104.log",
-            "hash": "f134dfaea097b6b88c7be77573ecaa86"
-        },
-        {
-            "date": 1641369216197,
-            "name": "log/koa-seed-20220105.log",
-            "hash": "a3fe3968669118c094c245d7cd3be995"
-        },
-        {
-            "date": 1641437267863,
-            "name": "log/koa-seed-20220106.log",
-            "hash": "8cbd9c2abdc46ecfe0c442ed673c2fac"
-        },
-        {
-            "date": 1641536483793,
-            "name": "log/koa-seed-20220107.log",
-            "hash": "2dbe9dd1e202eaf9b3f5cb636daf4337"
-        },
-        {
             "date": 1641624210472,
             "name": "log/koa-seed-20220108.log",
             "hash": "22b11c44a0ef252ceec7b39511636232"
@@ -44,6 +24,21 @@
             "date": 1641840388948,
             "name": "log/koa-seed-20220111.log",
             "hash": "a6286d7da54347593a2be2f0864dc8da"
+        },
+        {
+            "date": 1642064620297,
+            "name": "log/koa-seed-20220113.log",
+            "hash": "590adb732eba5e7ae0fcc8d3f3a3fe82"
+        },
+        {
+            "date": 1642131617556,
+            "name": "log/koa-seed-20220114.log",
+            "hash": "c15c2aeb6f08b7dee7dfd4c890c20841"
+        },
+        {
+            "date": 1642178932302,
+            "name": "log/koa-seed-20220115.log",
+            "hash": "8859ad130c1ad4cef8f15f8551bd1ccd"
         }
     ]
 }
