@@ -41,8 +41,8 @@ module.exports = {
     appSecretKey: 'XXXX'
   },
   qcloud: {
-    secretId: 'xxxx',
-    secretKey: 'xxxx'
+    secretId: 'AKID3vYv1qPjmZ6ML4WhbEbiY7PRCgtue8LH',
+    secretKey: 'h7G9m8D1astd6KHeka9RREm32kCNHuHN'
   },
   cos: {
     proxy: '',
@@ -76,12 +76,12 @@ module.exports = {
     reqMethod: 'POST', // SDK 默认使用 POST 方法
     reqTimeout: 30, // SDK 有默认的超时时间，非必要请不要进行调整
     endpoint: 'sms.tencentcloudapi.com',
-    region: 'ap-beijing', // 地域信息，根据所在地选择适用的
+    region: 'ap-shanghai', // 地域信息，根据所在地选择适用的
     smsType: 0, // 短信类型：0表示普通短信, 1表示营销短信
     international: 0, // 是否国际/港澳台短信：0：表示国内短信；1：表示国际/港澳台短信
-    smsSdkAppid: 'xxxx', // 短信应用ID：在 [短信控制台] 添加应用后生成的实际 SDKAppID，例如1400006666
-    sign: '腾讯科技', // 短信签名内容，必须填写已审核通过的签名
-    templateId: '123456' // 短信模板ID
+    smsSdkAppid: '1400624155', // 短信应用ID：在 [短信控制台] 添加应用后生成的实际 SDKAppID，例如1400006666
+    sign: '麦凯盈', // 短信签名内容，必须填写已审核通过的签名
+    templateId: '1278875' // 短信模板ID
   },
   codeEx: 60,
 }

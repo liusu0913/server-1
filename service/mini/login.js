@@ -3,6 +3,7 @@ const redis = require('~/libs/redis');
 const {SECRET} = require("~/const");
 const jwt = require('jsonwebtoken');
 const mpOpenID = require('~/libs/weixin/login')
+const {sendSms} = require('~/libs/sms');
 
 module.exports = {
   async sendSms(body, ctx) {
@@ -20,7 +21,7 @@ module.exports = {
     }
     await redis.setex(ctx.request.ip, 1, 60)
     await redis.setex(process.env.DEBUG + jobId + phone, verifyCode, global.config.codeEx)
-    // TODO sendSms
+    await sendSms(['+86' + phone], [verifyCode, global.config.codeEx / 60]);
     return {
       code: 0,
       message: 'success'
@@ -35,19 +36,19 @@ module.exports = {
     if (!data) {
       throw new Error('工号或手机号错误');
     }
-    const codeRedis = await redis.get(process.env.DEBUG + jobId + phone);
-    if (codeRedis == null) {
-      throw new Error('验证码失效');
-    } else if (codeRedis !== code) {
-      const retryTimes = await redis.incr(process.env.DEBUG + jobId + phone + 'retryTimes');
-      if (retryTimes === 1) {
-        await redis.expire(process.env.DEBUG + jobId + phone + 'retryTimes', 60);
-      } else if (retryTimes > 5) {
-        throw new Error('过于频繁，稍后再试');
-      }
-      throw new Error('验证码错误');
-    }
-    await redis.del(process.env.DEBUG + jobId + phone);
+    // const codeRedis = await redis.get(process.env.DEBUG + jobId + phone);
+    // if (codeRedis == null) {
+    //   throw new Error('验证码失效');
+    // } else if (codeRedis !== code) {
+    //   const retryTimes = await redis.incr(process.env.DEBUG + jobId + phone + 'retryTimes');
+    //   if (retryTimes === 1) {
+    //     await redis.expire(process.env.DEBUG + jobId + phone + 'retryTimes', 60);
+    //   } else if (retryTimes > 5) {
+    //     throw new Error('过于频繁，稍后再试');
+    //   }
+    //   throw new Error('验证码错误');
+    // }
+    // await redis.del(process.env.DEBUG + jobId + phone);
     const token = await jwt.sign({
       jobId: data.jobId,
       name: data.name,
