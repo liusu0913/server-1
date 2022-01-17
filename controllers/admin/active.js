@@ -2,6 +2,17 @@ const service = require('~/service/admin/active')
 const schema = require('~/validators/admin/active')
 const util = require('~/util')
 
+exports.batchDelete = async (ctx) => {
+  try {
+    console.log('activeIds')
+    const data = ctx.request.body
+    await util.validator.check(schema, 'batchDelete', data)
+    ctx.body = await service.batchDelete(data, ctx)
+  } catch (error) {
+    ctx.body = util.format.errHandler(error)
+  }
+}
+
 exports.list = async (ctx) => {
   try {
     const data = ctx.request.body

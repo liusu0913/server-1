@@ -1,8 +1,26 @@
 const { active, tags, activeType, activeTags } = require('~/models')
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
+const { Op } = require('sequelize')
 
 module.exports = {
+  async batchDelete (data, ctx) {
+    try {
+      const { session_user } = ctx
+      const { activeIds } = data
+      const where = {
+        activeId: {
+          [Op.in]: activeIds
+        },
+        belongCompany: session_user.belongCompany
+      }
+      const count = await active.destroy({ where })
+      return util.format.sucHandler({ count })
+    } catch (ex) {
+      logger.error(`delete|error:${ex.message}|stack:${ex.stack}`)
+      return util.format.errHandler(ex)
+    }
+  },
   async list (data, ctx) {
     try {
       const { session_user } = ctx
