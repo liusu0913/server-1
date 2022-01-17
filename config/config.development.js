@@ -16,9 +16,9 @@ module.exports = {
     logging: false
   },
   redis: {
-    host: '127.0.0.1',
+    host: '172.17.16.13',
     port: 6379,
-    password: ''
+    password: 'mkyredis123'
   },
   third: {
     component_appid: 'XXXX',
