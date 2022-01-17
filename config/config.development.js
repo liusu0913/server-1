@@ -83,5 +83,5 @@ module.exports = {
     sign: '麦凯盈', // 短信签名内容，必须填写已审核通过的签名
     templateId: '1278875' // 短信模板ID
   },
-  codeEx: 60,
+  codeEx: 60 * 5,
 }
