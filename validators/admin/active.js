@@ -1,4 +1,7 @@
 module.exports = {
+  batchDelete: {
+    required: ['activeIds']
+  },
   list: {
     required: ['offset', 'count']
   },
@@ -23,6 +26,9 @@ module.exports = {
   schema: {
     type: 'object',
     properties: {
+      activeIds: {
+        type: 'array'
+      },
       offset: {
         type: 'integer'
       },
