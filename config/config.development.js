@@ -7,10 +7,10 @@ module.exports = {
     hostname: 'localhost'
   },
   mysql: {
-    host: '172.17.0.17',
-    port: 3306,
+    host: '119.28.163.231',
+    port: 6000,
     username: 'root',
-    password: 'mky@mysql123',
+    password: 'Zym123,.',
     database: 'maikaiying',
     dialect: 'mysql',
     logging: false
