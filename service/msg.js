@@ -20,10 +20,22 @@ module.exports = {
         value: body.remark,
       },
     }
+    const mp_template_msg = {
+      "appid": global.config.serviceAccount.appid,
+      "template_id": templateID,
+      "url": "www.baidu.com",
+      "data": data
+    }
     const ACCESS_TOKEN = await mpAuth.getAccessTokenRemote(global.config.mp.appid, global.config.mp.secret);
     logger.info('ACCESS_TOKEN---> ', JSON.stringify(ACCESS_TOKEN));
-    const res = await mpMsg.sendMsg(ACCESS_TOKEN.access_token, openID, templateID, data);
+    const res = await mpMsg.sendMsg(ACCESS_TOKEN.access_token, openID, mp_template_msg);
     logger.info('Template Msg---> ', JSON.stringify(res))
+    if (res.errcode === 43004) {
+      return {
+        code: 43004,
+        message: "require subscribe"
+      }
+    }
     if (res.errcode !== 0) {
       throw new Error('公众号消息发送失败');
     }

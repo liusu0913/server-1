@@ -25,12 +25,12 @@ module.exports = {
     component_appsecret: 'XXXX'
   },
   mp: {
-    appid: 'wxa740aa4cf482d798',
-    secret: '78442db1117beb95b0d8166f7a7bceca'
+    appid: 'wxc26091fcd766a086',
+    secret: '442a644e3d3497dc6224eeb5d6dfa536'
   },
   serviceAccount: {
-    appid: 'XXXX',
-    secret: 'XXXX'
+    appid: 'wxa740aa4cf482d798',
+    secret: '78442db1117beb95b0d8166f7a7bceca'
   },
   jwt: {
     secret: 'XXXX',

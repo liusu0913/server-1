@@ -57,26 +57,21 @@ module.exports = {
     const belongCompany = session_user.belongCompany;
     const companyId = session_user.companyId + '%';
     const today = new Date().toISOString().slice(0, 10);
-    // mysql5.7没有窗口函数RANK()，此处使用变量实现RANK()
-    const result = await sequelize.query(`select rank
-                                          from (select a.*,
-                                                       @rowNumber := @rowNumber + 1, @rank := if(@curUV = a.uv,
-                                          @rank, @rowNumber) as rank, @curUV := a.uv
-                                                from
-                                                    (select job_id, count (distinct open_id) as uv
-                                                    from pvLog
-                                                    where belong_company = ?
-                                                    and company_id like ?
-                                                    and date (updated_at) = ?
-                                                    group by job_id
-                                                    order by uv desc) a,
-                                                    (select @rank := 0, @rowNumber := 0, @curUV := null) r) b
+    // mysql8.0支持窗口函数RANK()
+    const result = await sequelize.query(`select rankUV
+                                          from (select job_id,
+                                                       rank() over (order by count(distinct open_id) desc) as rankUV
+                                                from pvLog
+                                                where belong_company = ?
+                                                  and company_id like ?
+                                                  and date (updated_at) = ?
+                                          group by job_id) a
                                           where job_id = ?`,
       {
         replacements: [belongCompany, companyId, today, jobId],
         type: QueryTypes.SELECT
       });
-    const data = {rank: result.length === 0 ? 0 : parseInt(result[0].rank)}
+    const data = {rank: result.length === 0 ? 0 : result[0].rankUV}
     return {
       code: 0,
       message: 'success',
