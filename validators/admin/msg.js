@@ -1,5 +1,5 @@
 module.exports = {
   sendMsg: {
-    required: ['openID'],
-  },
+    required: ['openID']
+  }
 }
