@@ -71,6 +71,12 @@ pvLog.hasOne(active, {
 })
 
 pvLog.hasOne(wxuser, {
+  sourceKey: 'openId',
+  foreignKey: 'openId',
+  as: 'user'
+})
+
+pvLog.hasOne(wxuser, {
   sourceKey: 'sourceOpenId',
   foreignKey: 'openId',
   as: 'sourceUser'

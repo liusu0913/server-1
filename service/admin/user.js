@@ -25,7 +25,95 @@ const forMatXlsxData = (data) => {
   return result
 }
 
+const formatTree = (tree, item) => {
+  if (item.companyId === tree.companyId) return
+  if (item.companyId.indexOf(tree.companyId) === 0) {
+    // 包含关系
+    if (item.companyId.length - tree.companyId.length === 2) {
+      console.log(tree.company, item.company)
+      // 直系子
+      tree.children.push({
+        company: item.company,
+        companyId: item.companyId
+      })
+    } else {
+      // 隔代子
+      tree.children.forEach((i) => {
+        if (!i.children) {
+          i.children = []
+        }
+        formatTree(i, item)
+      })
+    }
+  }
+}
+
 module.exports = {
+  async filialeTree (ctx) {
+    try {
+      const { session_user } = ctx
+      const where = {
+        companyId: {
+          [op.like]: `${session_user.companyId}%`
+        },
+        belongCompany: session_user.belongCompany,
+        role: 3
+      }
+      const res = await user.findAll({
+        attributes: ['companyId', 'company'],
+        where
+      })
+      let tree = {}
+      const company = res.filter((item) => item.companyId === session_user.companyId)
+      if (company.length) {
+        tree = {
+          companyId: session_user.companyId,
+          company: company[0].company,
+          children: []
+        }
+      }
+      const list = res.sort((a, b) => {
+        return a.companyId.length - b.companyId.length
+      })
+      list.forEach((item) => {
+        formatTree(tree, item)
+      })
+      return {
+        code: 0,
+        data: tree,
+        message: 'success'
+      }
+    } catch (ex) {
+      logger.error(`delete|error:${ex.message}|stack:${ex.stack}`)
+      return util.format.errHandler(ex)
+    }
+  },
+  async batchHandle (data, ctx) {
+    try {
+      const { session_user } = ctx
+      const { jobIds, type } = data
+      delete data.jobIds
+      delete data.type
+      const where = {
+        jobId: {
+          [op.in]: jobIds
+        },
+        belongCompany: session_user.belongCompany
+      }
+      let count = 0
+      if (type) {
+        // 激活和停用
+        [count] = await user.update(data, { where })
+      } else {
+        // 删除
+        count = await user.destroy({ where })
+      }
+      return util.format.sucHandler({ count })
+    } catch (ex) {
+      logger.error(`delete|error:${ex.message}|stack:${ex.stack}`)
+      return util.format.errHandler(ex)
+    }
+  },
   async allList (data, ctx) {
     // 查找列表需要根据公司id的层级条件进行查找
     try {
@@ -156,10 +244,10 @@ module.exports = {
   },
   async infoMini (where) {
     try {
-      return await user.findOne({where});
+      return await user.findOne({ where })
     } catch (ex) {
-      logger.error(`info|error:${ex.message}|stack:${ex.stack}`);
-      return null;
+      logger.error(`info|error:${ex.message}|stack:${ex.stack}`)
+      return null
     }
   },
   async batchAdd ({ filePath, type, role, ctx }) {

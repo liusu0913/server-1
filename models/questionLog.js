@@ -67,6 +67,15 @@ module.exports = sequelize => {
       comment: null,
       field: "company"
     },
+    sourceOpenId: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "source_open_id"
+    },
     belongCompany: {
       type: DataTypes.INTEGER(10),
       allowNull: false,

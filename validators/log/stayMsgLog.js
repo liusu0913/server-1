@@ -8,6 +8,7 @@ module.exports = {
       'openId',
       'phone',
       'jobId',
+      'userName',
       'belongCompany'
     ]
   },

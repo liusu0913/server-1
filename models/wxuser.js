@@ -55,8 +55,17 @@ module.exports = sequelize => {
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: "手机号",
+      comment: "留资的手机号手机号",
       field: "phone"
+    },
+    userName: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "留资的真实姓名",
+      field: "userName"
     },
     content: {
       type: DataTypes.STRING(255),

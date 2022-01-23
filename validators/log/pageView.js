@@ -13,7 +13,6 @@ module.exports = {
       'activeId',
       'openId',
       'jobId',
-      'stayTime',
       'belongCompany'
     ]
   },

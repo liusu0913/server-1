@@ -4,7 +4,6 @@ const util = require('~/util')
 
 exports.batchDelete = async (ctx) => {
   try {
-    console.log('activeIds')
     const data = ctx.request.body
     await util.validator.check(schema, 'batchDelete', data)
     ctx.body = await service.batchDelete(data, ctx)

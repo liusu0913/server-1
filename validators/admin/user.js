@@ -1,5 +1,9 @@
 
 module.exports = {
+  // type：0是批量删除；1是批量激活或者停用
+  batchHandle: {
+    required: ['type', 'jobIds']
+  },
   allList: {
     required: ['role']
   },
@@ -36,6 +40,9 @@ module.exports = {
   schema: {
     type: 'object',
     properties: {
+      jobIds: {
+        tyep: 'array'
+      },
       status: {
         type: 'string',
         enum: ['0', '1']

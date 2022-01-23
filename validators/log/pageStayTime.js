@@ -7,8 +7,8 @@ module.exports = {
       'activeId',
       'openId',
       'jobId',
-      'belongCompany',
-      'stayTime'
+      'stayTime',
+      'belongCompany'
     ]
   },
   schema: {
@@ -35,10 +35,6 @@ module.exports = {
         type: 'string',
         maxLength: 255
       },
-      name: {
-        type: 'string',
-        maxLength: 255
-      },
       companyId: {
         type: 'string',
         maxLength: 255
@@ -49,10 +45,6 @@ module.exports = {
       },
       belongCompany: {
         type: 'integer'
-      },
-      result: {
-        type: 'string',
-        maxLength: 255
       }
     }
   }

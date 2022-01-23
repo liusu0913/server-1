@@ -1,4 +1,7 @@
 module.exports = {
+  batchDelete: {
+    required: ['fodderIds']
+  },
   list: {
     required: ['offset', 'count']
   },
@@ -17,6 +20,9 @@ module.exports = {
   schema: {
     type: 'object',
     properties: {
+      fodderIds: {
+        type: 'array'
+      },
       type: {
         type: 'integer'
       },

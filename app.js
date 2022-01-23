@@ -35,7 +35,8 @@ app.use(Middles.auth([
   '/api/mini/login/sendSms',
   '/api/mini/login/login',
   '/api/admin/company/list',
-  '/api/mini/common/getUnionid'
+  '/api/mini/common/getUnionid',
+  '/api/mini/common/getMpOpenId'
 ]))
 app.use(Middles.router(app, { root: './controllers', ignore: ['third'] }))
 

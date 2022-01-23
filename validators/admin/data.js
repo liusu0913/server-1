@@ -1,4 +1,9 @@
 module.exports = {
+  activeDetail: {
+    required: [
+      'activeId'
+    ]
+  },
   activeData: {
     required: [
       'activeId',

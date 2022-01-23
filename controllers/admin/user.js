@@ -2,6 +2,24 @@ const service = require('~/service/admin/user')
 const schema = require('~/validators/admin/user')
 const util = require('~/util')
 
+exports.filialeTree = async (ctx) => {
+  try {
+    ctx.body = await service.filialeTree(ctx)
+  } catch (error) {
+    ctx.body = util.format.errHandler(error)
+  }
+}
+
+exports.batchHandle = async (ctx) => {
+  try {
+    const data = ctx.request.body
+    await util.validator.check(schema, 'batchHandle', data)
+    ctx.body = await service.batchHandle(data, ctx)
+  } catch (error) {
+    ctx.body = util.format.errHandler(error)
+  }
+}
+
 exports.allList = async (ctx) => {
   try {
     const data = ctx.request.body

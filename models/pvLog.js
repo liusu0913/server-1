@@ -67,24 +67,6 @@ module.exports = sequelize => {
       comment: null,
       field: "company"
     },
-    stayTime: {
-      type: DataTypes.BIGINT,
-      allowNull: true,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "stay_time"
-    },
-    pageCount: {
-      type: DataTypes.INTEGER(10),
-      allowNull: true,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: "浏览页面页数",
-      field: "page_count"
-    },
     sourceOpenId: {
       type: DataTypes.STRING(255),
       allowNull: true,

@@ -37,8 +37,35 @@ module.exports = sequelize => {
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: null,
+      comment: "留资电话",
       field: "phone"
+    },
+    content: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "留资的其他信息",
+      field: "content"
+    },
+    sourceOpenId: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "source_open_id"
+    },
+    userName: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "留资姓名",
+      field: "user_name"
     },
     jobId: {
       type: DataTypes.STRING(255),
@@ -84,15 +111,6 @@ module.exports = sequelize => {
       autoIncrement: false,
       comment: null,
       field: "belong_company"
-    },
-    content: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "content"
     },
     updatedAt: {
       type: DataTypes.DATE,

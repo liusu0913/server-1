@@ -11,3 +11,13 @@ exports.getUnionid = async (ctx) => {
     ctx.body = util.format.errHandler(error)
   }
 }
+
+exports.getMpOpenId = async (ctx) => {
+  try {
+    const data = ctx.request.body
+    await util.validator.check(schema, 'getMpOpenId', data)
+    ctx.body = await service.getMpOpenId(data)
+  } catch (error) {
+    ctx.body = util.format.errHandler(error)
+  }
+}

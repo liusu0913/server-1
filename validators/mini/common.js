@@ -2,6 +2,9 @@ module.exports = {
   getUnionid: {
     required: ['code']
   },
+  getMpOpenId: {
+    required: ['code']
+  },
   schema: {
     type: 'object',
     properties: {

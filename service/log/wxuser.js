@@ -36,8 +36,37 @@ module.exports = {
             delete data.sourceOpenId
           }
         }
-        const result = await wxuser.create(data)
-        return util.format.sucHandler(result)
+        const wxuserInfo = await wxuser.findOne({
+          where: {
+            openId: data.openId,
+            belongCompany: data.belongCompany
+          }
+        })
+
+        if (wxuserInfo) {
+          delete data.activeId
+          delete data.sourceJobId
+          if (wxuserInfo.sourceOpenId) {
+            delete data.sourceOpenId
+          }
+          await wxuser.update(data, {
+            where: {
+              openId: data.openId,
+              belongCompany: data.belongCompany
+            }
+          })
+          return {
+            code: 0,
+            data: {
+              ...wxuserInfo.dataValues,
+              ...data
+            },
+            message: 'success'
+          }
+        } else {
+          const result = await wxuser.create(data)
+          return util.format.sucHandler(result)
+        }
       }
     } catch (ex) {
       logger.error(`create|error:${ex.message}|stack:${ex.stack}`)

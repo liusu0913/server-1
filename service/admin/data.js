@@ -1,7 +1,9 @@
-const { pvLog, shareLog, stayMsgLog } = require('~/models')
+const { pvLog, shareLog, stayMsgLog, wxuser, active } = require('~/models')
+const redis = require('~/libs/redis')
 const { Op } = require('sequelize')
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
+const nodeXlsx = require('node-xlsx')
 
 function getLogData (flag, key, arr) {
   const dataArr = arr.filter((data) => data[flag] === key)
@@ -120,5 +122,124 @@ module.exports = {
       logger.error(`list|error:${ex.message}|stack:${ex.stack}`)
       return util.format.errHandler(ex)
     }
+  },
+  async activeDetail (data, ctx) {
+    try {
+      const { activeId } = data
+      const { session_user } = ctx
+      const list = []
+      const where = {
+        activeId,
+        belongCompany: session_user.belongCompany,
+        companyId: {
+          [Op.like]: `${session_user.companyId}%`
+        }
+      }
+      const pvRes = await pvLog.findAll({
+        where,
+        distinct: true,
+        order: [['createdAt', 'ASC']],
+        include: [{
+          attributes: ['name'],
+          model: wxuser,
+          where: {
+            belongCompany: session_user.belongCompany
+          },
+          as: 'user'
+        }, {
+          attributes: ['title'],
+          model: active,
+          where: {
+            belongCompany: session_user.belongCompany
+          },
+          as: 'active'
+        }]
+      })
+      const stayMsgRes = await stayMsgLog.findAll({
+        where
+      })
+      pvRes.forEach(pv => {
+        const data = {}
+        const index = list.findIndex((i) => i.openId === pv.openId)
+        const isHas = index > -1
+        if (isHas) {
+          list[index].endTime = pv.createdAt
+          return
+        } else {
+          data.openId = pv.openId
+          data.activeId = pv.activeId
+          data.activeName = pv.active ? pv.active.title || '' : ''
+          data.companyId = pv.companyId
+          data.companyName = pv.company
+          data.jobId = pv.jobId
+          data.staffName = pv.name
+          data.nickName = pv.user ? pv.user.name || '' : ''
+          data.startTime = pv.createdAt
+          data.endTime = pv.createdAt
+          const stayMsgArr = stayMsgRes.filter(i => i.openId === pv.openId)
+          if (stayMsgArr.length) {
+            const stayMsg = stayMsgArr[0]
+            data.companyId = stayMsg.companyId
+            data.companyName = stayMsg.company
+            data.jobId = stayMsg.jobId
+            data.staffName = stayMsg.name
+            data.phone = stayMsg.phone || ''
+            data.name = stayMsg.userName || ''
+          } else {
+            data.phone = ''
+            data.name = ''
+          }
+        }
+        list.push(data)
+      })
+      await redis.setex(`${session_user.job}_view_${activeId}_data`, JSON.stringify(list), 60 * 60 * 24)
+      return {
+        code: 0,
+        data: {
+          list
+        },
+        message: 'success'
+      }
+    } catch (ex) {
+      logger.error(`list|error:${ex.message}|stack:${ex.stack}`)
+      return util.format.errHandler(ex)
+    }
+  },
+  async exportXlsx (data, ctx) {
+    try {
+      const { activeId } = data
+      const { session_user } = ctx
+      let list = await redis.get(`${session_user.job}_view_${activeId}_data`)
+      if (list) {
+        list = JSON.parse(list)
+      } else {
+        const res = this.activeDetail({ activeId }, ctx)
+        if (res.code === 0) {
+          list = data.list
+        } else {
+          throw new Error('获取数据元失败，请稍后重试')
+        }
+      }
+      const xlsxData = []
+      list.forEach((item) => {
+        item.endTime = util.date.format(item.endTime)
+        item.startTime = util.date.format(item.startTime)
+        xlsxData.push([item.activeId, item.activeName, item.companyId, item.companyName, item.jobId, item.staffName, item.nickName, item.name, item.phone, item.startTime, item.endTime])
+      })
+      xlsxData.unshift(['活动ID', '活动名称', '机构代码', '机构名称', '代理人工号', '代理人', '客户微信昵称', '客户姓名', '客户电话', '首次进入时间', '最后进入时间'])
+      // 转化为二进制的buffer数据流
+      const bufferData = nodeXlsx.build([{ name: '数据', data: xlsxData }])
+      // 设置
+      ctx.set('Content-disposition', `attachment;filename=${encodeURIComponent('数据')}.xlsx`)
+      return {
+        code: 0,
+        data: bufferData,
+        message: 'success'
+      }
+    } catch (ex) {
+      logger.error(`list|error:${ex.message}|stack:${ex.stack}`)
+      return util.format.errHandler(ex)
+    }
   }
+
 }

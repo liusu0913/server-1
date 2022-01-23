@@ -7,8 +7,8 @@ module.exports = {
       'activeId',
       'openId',
       'jobId',
-      'belongCompany',
-      'result'
+      'result',
+      'belongCompany'
     ]
   },
   schema: {

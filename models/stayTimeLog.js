@@ -40,14 +40,59 @@ module.exports = sequelize => {
       comment: null,
       field: "job_id"
     },
+    name: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "name"
+    },
     companyId: {
-      type: DataTypes.INTEGER(10),
+      type: DataTypes.STRING(255),
       allowNull: false,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
       comment: null,
       field: "company_id"
+    },
+    company: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "company"
+    },
+    stayTime: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "页面停留时间",
+      field: "stay_time"
+    },
+    pageCount: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "页面离开时的位置",
+      field: "page_count"
+    },
+    sourceOpenId: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "source_open_id"
     },
     belongCompany: {
       type: DataTypes.INTEGER(10),
@@ -57,24 +102,6 @@ module.exports = sequelize => {
       autoIncrement: false,
       comment: null,
       field: "belong_company"
-    },
-    stayTime: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "stay_time"
-    },
-    pageCount: {
-      type: DataTypes.INTEGER(11),
-      allowNull: true,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "page_count"
     },
     updatedAt: {
       type: DataTypes.DATE,
