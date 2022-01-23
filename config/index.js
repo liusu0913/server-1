@@ -10,7 +10,8 @@ module.exports = function config (args) {
   // 获取默认配置
   const cfg = require('../config/config')
   // 获取当前的环境
-  const env = args.env || 'development'
+  const env = process.env.ROCKET_ENV || 'development'
+  console.log(process.env.ROCKET_ENV)
 
   // 获取环境配置
   const envPath = path.resolve(`./config/config.${env}.js`)

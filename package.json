@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node bin/www",
-    "dev": "cross-env DEBUG=rocket-node* ./node_modules/.bin/nodemon bin/www",
+    "start": "cross-env ROCKET_ENV=production node bin/www",
+    "dev": "cross-env ROCKET_ENV=development DEBUG=rocket-node* ./node_modules/.bin/nodemon bin/www",
     "deploy": "cloudbase framework:deploy",
     "auto": "cross-env ROCKET_ENV=development sequelize-automate -c ./sequelize-automate.config.js",
     "gen": "cross-env ROCKET_ENV=development rocket crud -c ./rocket.crud.js",

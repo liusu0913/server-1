@@ -2,35 +2,35 @@ process.env.DEBUG = process.env.DEBUG || 'koa-grace-error:*'
 
 module.exports = {
   site: {
-    env: 'development',
+    env: 'production',
     port: 3000,
     hostname: 'localhost'
   },
   mysql: {
-    host: '172.17.0.17',
-    port: 3306,
+    host: '119.28.163.231',
+    port: 6000,
     username: 'root',
-    password: 'mky@mysql123',
+    password: 'Zym123,.',
     database: 'maikaiying',
     dialect: 'mysql',
     logging: false
   },
   redis: {
-    host: '172.17.16.13',
+    host: '127.0.0.1',
     port: 6379,
-    password: 'mkyredis123'
+    password: ''
   },
   third: {
     component_appid: 'XXXX',
     component_appsecret: 'XXXX'
   },
   mp: {
-    appid: 'wxc26091fcd766a086',
-    secret: '442a644e3d3497dc6224eeb5d6dfa536'
-  },
-  serviceAccount: {
     appid: 'wxa740aa4cf482d798',
     secret: '78442db1117beb95b0d8166f7a7bceca'
+  },
+  serviceAccount: {
+    appid: 'XXXX',
+    secret: 'XXXX'
   },
   jwt: {
     secret: 'XXXX',
@@ -84,4 +84,18 @@ module.exports = {
     templateId: '1278875' // 短信模板ID
   },
   codeEx: 60 * 5,
+  pstn: {
+    cache_key: 'pstn:%s:%s',
+    appid: 'XXX',
+    id: 'XXX',
+    cityId: 'XXX',
+    maxAssignTime: 'XXX', // 绑定时长单位s
+    domain: 'XXX',
+    api: {
+      getVirtualNumber: 'XXX',
+      delVirtualNumber: 'XXX'
+    },
+    hangupUrl: 'XXX',
+    recordUrl: 'XXX'
+  }
 }
