@@ -228,12 +228,13 @@ module.exports = {
       })
       xlsxData.unshift(['活动ID', '活动名称', '机构代码', '机构名称', '代理人工号', '代理人', '客户微信昵称', '客户姓名', '客户电话', '首次进入时间', '最后进入时间'])
       // 转化为二进制的buffer数据流
-      const bufferData = nodeXlsx.build([{ name: '数据', data: xlsxData }])
+      const bufferData = nodeXlsx.build(xlsxData)
       // 设置
-      ctx.set('Content-disposition', `attachment;filename=${encodeURIComponent('数据')}.xlsx`)
+      ctx.set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8')
+      // bufferData.data =
       return {
         code: 0,
-        data: bufferData,
+        data: bufferData.toString('base64'),
         message: 'success'
       }
     } catch (ex) {
