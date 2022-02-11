@@ -5,9 +5,15 @@ module.exports = {
   getMpOpenId: {
     required: ['code']
   },
+  getMpSign: {
+    required: ['url']
+  },
   schema: {
     type: 'object',
     properties: {
+      url: {
+        type: 'string'
+      },
       fatherId: {
         type: 'integer'
       },

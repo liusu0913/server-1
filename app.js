@@ -31,12 +31,17 @@ app.use(views(`${__dirname}/views`, {
 
 app.use(Middles.apiLog)
 app.use(Middles.auth([
+  '/api/log/pageView/create',
+  '/api/log/pageShare/create',
+  '/api/log/wxuser/create',
   '/api/common/login',
   '/api/mini/login/sendSms',
   '/api/mini/login/login',
   '/api/admin/company/list',
   '/api/mini/common/getUnionid',
-  '/api/mini/common/getMpOpenId'
+  '/api/mini/common/getMpOpenId',
+  '/api/mini/common/getMpUserMsg',
+  '/api/mini/common/getMpSign'
 ]))
 app.use(Middles.router(app, { root: './controllers', ignore: ['third'] }))
 
