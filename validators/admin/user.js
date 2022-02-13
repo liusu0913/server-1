@@ -1,5 +1,8 @@
 
 module.exports = {
+  getCompanyStaff: {
+    required: ['companyId', 'role']
+  },
   // type：0是批量删除；1是批量激活或者停用
   batchHandle: {
     required: ['type', 'jobIds']

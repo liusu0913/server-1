@@ -10,6 +10,16 @@ exports.filialeTree = async (ctx) => {
   }
 }
 
+exports.getCompanyStaff = async (ctx) => {
+  try {
+    const data = ctx.request.body
+    await util.validator.check(schema, 'getCompanyStaff', data)
+    ctx.body = await service.getCompanyStaff(data, ctx)
+  } catch (error) {
+    ctx.body = util.format.errHandler(error)
+  }
+}
+
 exports.batchHandle = async (ctx) => {
   try {
     const data = ctx.request.body
