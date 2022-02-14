@@ -53,7 +53,6 @@ module.exports = {
   async getMsgCount (ctx) {
     try {
       const { session_user } = ctx
-      console.log(session_user.jobId)
       const moreSendTime = await getTime({
         type: 1,
         jobId: session_user.jobId,
@@ -177,7 +176,6 @@ module.exports = {
       const { jobIds } = data
       let count = 0
       delete data.jobIds
-      console.log(jobIds)
       for (let i = 0; i < jobIds.length; i++) {
         data.jobId = jobIds[i]
         let res = await activeRemind.create(data)

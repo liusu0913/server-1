@@ -10,13 +10,17 @@ module.exports = function (ignoreApi = []) {
     }
     try {
       const res = await jwt.verify(ctx.header.authorization.slice(7), SECRET)
-      if (ctx.url !== '/admin/user/info') {
-        if (res.role === 0 && data.belongCompany === undefined) {
-          ctx.body = {
-            code: 1002,
-            message: '缺少必要参数：超级管理员创建用户，必须传递belongCompany'
+      if (ctx.url !== '/api/admin/user/info') {
+        if (res.role === 0) {
+          if (data.belongCompany) {
+            res.belongCompany = data.belongCompany
+          } else {
+            ctx.body = {
+              code: 1002,
+              message: '缺少必要参数：超级管理员创建用户，必须传递belongCompany'
+            }
+            return
           }
-          return
         }
       }
       ctx.session_user = res

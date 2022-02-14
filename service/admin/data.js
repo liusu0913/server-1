@@ -228,7 +228,7 @@ module.exports = {
       })
       xlsxData.unshift(['活动ID', '活动名称', '机构代码', '机构名称', '代理人工号', '代理人', '客户微信昵称', '客户姓名', '客户电话', '首次进入时间', '最后进入时间'])
       // 转化为二进制的buffer数据流
-      const bufferData = nodeXlsx.build(xlsxData)
+      const bufferData = nodeXlsx.build([{ data: xlsxData }])
       // 设置
       ctx.set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8')
       // bufferData.data =
