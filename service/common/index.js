@@ -67,8 +67,8 @@ module.exports = {
   async getCosConfig ({ bucket, region, allowPrefix = 'avatar', durationSeconds = 1800 }) {
     // 配置参数
     var config = {
-      secretId: 'AKIDqXy93f04rNcacPwCBtKUNyIM8dqmSr0s', // 固定密钥
-      secretKey: 'e16uRgeLlvoQlpc8NL2RZQ0JK4XicFbg', // 固定密钥
+      secretId: 'AKID3vYv1qPjmZ6ML4WhbEbiY7PRCgtue8LH', // 固定密钥
+      secretKey: 'h7G9m8D1astd6KHeka9RREm32kCNHuHN', // 固定密钥
       bucket,
       region
     }

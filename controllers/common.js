@@ -16,6 +16,8 @@ exports.getCosConfig = async (ctx) => {
   try {
     const data = ctx.request.body
     await util.validator.check(schema, 'getCosConfig', data)
+    // const a = await service.getCosConfig(data)
+    // console.log(a)
     ctx.body = await service.getCosConfig(data)
   } catch (error) {
     ctx.body = util.format.errHandler(error)
