@@ -32,3 +32,15 @@ exports.delete = async (ctx) => {
     ctx.body = util.format.errHandler(error)
   }
 }
+
+exports.update = async (ctx) => {
+  try {
+    const data = ctx.request.body
+    await util.validator.check(schema, 'update', data)
+    const { id } = data
+    delete data.id
+    ctx.body = await service.update(data, { id }, ctx)
+  } catch (error) {
+    ctx.body = util.format.errHandler(error)
+  }
+}

@@ -22,6 +22,15 @@ module.exports = sequelize => {
       comment: null,
       field: "name"
     },
+    icon: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "icon"
+    },
     fatherId: {
       type: DataTypes.INTEGER(10),
       allowNull: false,

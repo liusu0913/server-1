@@ -49,6 +49,24 @@ module.exports = {
       logger.error(`delete|error:${ex.message}|stack:${ex.stack}`)
       return util.format.errHandler(ex)
     }
+  },
+  async update (data, where, ctx) {
+    try {
+      const { session_user } = ctx
+      where = {
+        ...where,
+        belongCompany: session_user.belongCompany
+      }
+      const [count = 0] = await tags.update(data, { where })
+      if (count > 0) {
+        return util.format.sucHandler({ count })
+      } else {
+        return util.format.errHandler('更新失败，没有找到可以更新的记录!')
+      }
+    } catch (ex) {
+      logger.error(`update|error:${ex.message}|stack:${ex.stack}`)
+      return util.format.errHandler(ex)
+    }
   }
 
 }

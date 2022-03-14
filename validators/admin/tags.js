@@ -5,6 +5,9 @@ module.exports = {
   create: {
     required: ['name', 'fatherId']
   },
+  update: {
+    required: ['name', 'id']
+  },
   delete: {
     required: ['id']
   },
