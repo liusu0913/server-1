@@ -50,6 +50,7 @@ module.exports = {
       delete data.search
       data = util.format.dataProcessor(data)
       const queryWhere = {
+        sourceJobId: session_user.jobId,
         belongCompany: session_user.belongCompany
       }
       if (search) {

@@ -3,7 +3,7 @@ module.exports = {
     required: ['offset', 'count']
   },
   create: {
-    required: ['companyName']
+    required: ['companyName', 'logo']
   },
   update: {
     required: ['id']
@@ -27,6 +27,10 @@ module.exports = {
         type: 'integer'
       },
       companyName: {
+        type: 'string',
+        maxLength: 255
+      },
+      logo: {
         type: 'string',
         maxLength: 255
       },

@@ -12,6 +12,8 @@ function forMatActiveData (active) {
   })
   return {
     activeId: active.activeId,
+    thumbnail: active.thumbnail,
+    banner: active.banner,
     title: active.title,
     url: active.url,
     img: active.img,

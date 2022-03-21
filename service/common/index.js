@@ -54,7 +54,7 @@ module.exports = {
       role: data.role,
       belongCompany: data.belongCompany
     }, SECRET, {
-      expiresIn: '7d'
+      expiresIn: '365d'
     })
     return {
       code: 0,

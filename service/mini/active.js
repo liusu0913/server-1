@@ -11,6 +11,8 @@ function forMatActiveData (active, uv, share, stayMsg) {
     }
   })
   return {
+    thumbnail: active.thumbnail,
+    banner: active.banner,
     activeId: active.activeId,
     title: active.title,
     url: active.url,
@@ -108,7 +110,7 @@ module.exports = {
           }]
         })
         const res = util.format.sucHandler(result, 'list')
-        count = res.count
+        count = res.data.count
         res.data.list.forEach((item) => {
           list.push(forMatActiveData(item, session_user))
         })
@@ -158,7 +160,7 @@ module.exports = {
           order: [['updatedAt', 'ASC']]
         })
         const res = util.format.sucHandler(result, 'list')
-        count = res.count
+        count = res.data.count
         for (let i = 0; i < res.data.list.length; i++) {
           const { active } = res.data.list[i]
           const dataQuery = {

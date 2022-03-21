@@ -1,4 +1,4 @@
-const { user } = require('~/models')
+const { user, company } = require('~/models')
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
 
@@ -28,7 +28,14 @@ module.exports = {
         ...where,
         belongCompany: session_user.belongCompany
       }
+      const companyRes = await company.findOne({
+        attributes: ['id', 'companyName', 'logo'],
+        where: {
+          id: session_user.belongCompany
+        }
+      })
       const result = await user.findOne({ where })
+      result.company = companyRes
       if (result) {
         return util.format.sucHandler(result)
       } else {

@@ -111,6 +111,24 @@ module.exports = sequelize => {
       autoIncrement: false,
       comment: "更新时间",
       field: "updated_at"
+    },
+    thumbnail: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "thumbnail"
+    },
+    banner: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "banner"
     }
   };
   const options = {

@@ -10,7 +10,12 @@ module.exports = function (ignoreApi = []) {
     }
     try {
       const res = await jwt.verify(ctx.header.authorization.slice(7), SECRET)
-      if (ctx.url !== '/api/admin/user/info') {
+      const superAdminIgnoreApi = [
+        '/api/admin/user/info',
+        '/api/admin/company/create',
+        '/api/admin/company/delete'
+      ]
+      if (superAdminIgnoreApi.indexOf(ctx.url) === -1) {
         if (res.role === 0) {
           if (data.belongCompany) {
             res.belongCompany = data.belongCompany

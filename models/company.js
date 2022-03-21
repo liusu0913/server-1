@@ -22,6 +22,15 @@ module.exports = sequelize => {
       comment: null,
       field: "company_name"
     },
+    logo: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "logo"
+    },
     updatedAt: {
       type: DataTypes.DATE,
       allowNull: false,
