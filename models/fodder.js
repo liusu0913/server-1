@@ -75,6 +75,15 @@ module.exports = sequelize => {
       autoIncrement: false,
       comment: null,
       field: "updated_at"
+    },
+    imgs: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "imgs"
     }
   };
   const options = {

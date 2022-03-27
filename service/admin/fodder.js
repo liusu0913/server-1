@@ -67,6 +67,9 @@ module.exports = {
       if (session_user.role) {
         data.belongCompany = session_user.belongCompany
       }
+      if (data.imgs) {
+        data.imgs = JSON.stringify(data.imgs)
+      }
       const result = await fodder.create(data)
       return util.format.sucHandler(result)
     } catch (ex) {
@@ -81,9 +84,10 @@ module.exports = {
         ...where,
         belongCompany: session_user.belongCompany
       }
-      console.log(where)
+      if (data.imgs) {
+        data.imgs = JSON.stringify(data.imgs)
+      }
       const count = await fodder.update(data, { where })
-      console.log(count)
       if (count > 0) {
         return util.format.sucHandler({ count })
       } else {
