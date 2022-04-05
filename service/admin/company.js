@@ -15,6 +15,11 @@ module.exports = {
   },
   async create (data) {
     try {
+      Object.keys(data).forEach(key => {
+        if (typeof data[key] !== 'string') {
+          data[key] = JSON.stringify(data[key])
+        }
+      })
       const result = await company.create(data)
       return util.format.sucHandler(result)
     } catch (ex) {
@@ -48,9 +53,14 @@ module.exports = {
       return util.format.errHandler(ex)
     }
   },
-  async info (where) {
+  async info (ctx) {
     try {
-      const result = await company.findOne({ where })
+      const { session_user } = ctx
+      const result = await company.findOne({
+        where: {
+          id: session_user.belongCompany
+        }
+      })
       if (result) {
         return util.format.sucHandler(result)
       } else {

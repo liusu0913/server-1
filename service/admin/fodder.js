@@ -66,6 +66,8 @@ module.exports = {
       const { session_user } = ctx
       if (session_user.role) {
         data.belongCompany = session_user.belongCompany
+        data.createId = session_user.jobId
+        data.createCompanyCode = session_user.companyId
       }
       if (data.imgs) {
         data.imgs = JSON.stringify(data.imgs)

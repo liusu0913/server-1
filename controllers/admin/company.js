@@ -48,3 +48,11 @@ exports.delete = async (ctx) => {
     ctx.body = util.format.errHandler(error)
   }
 }
+
+exports.info = async (ctx) => {
+  try {
+    ctx.body = await service.info(ctx)
+  } catch (error) {
+    ctx.body = util.format.errHandler(error)
+  }
+}

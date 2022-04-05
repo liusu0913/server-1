@@ -1,6 +1,7 @@
 const { user, company } = require('~/models')
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
+const { WXREPEAT } = require('~/const/index')
 
 module.exports = {
   async update (data, ctx) {
@@ -9,6 +10,20 @@ module.exports = {
       const where = {
         jobId: session_user.jobId,
         belongCompany: session_user.belongCompany
+      }
+      if (data.openId) {
+        const userInfo = await user.findOne({
+          where: {
+            openId: data.openId,
+            belongCompany: session_user.belongCompany
+          }
+        })
+        if (userInfo && userInfo.jobId && userInfo.jobId !== session_user.jobId) {
+          return {
+            code: WXREPEAT,
+            message: `该微信已经绑定工号${userInfo.jobId}`
+          }
+        }
       }
       const [count = 0] = await user.update(data, { where })
       if (count > 0) {

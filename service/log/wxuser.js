@@ -7,6 +7,9 @@ module.exports = {
     try {
       // 先拿到unionid 去匹配
       const { unionid, belongCompany, openId, sourceOpenId } = data
+      if (sourceOpenId === openId) {
+        delete data.sourceOpenId
+      }
       const res = await user.findOne({
         where: {
           belongCompany,
@@ -14,6 +17,15 @@ module.exports = {
         }
       })
       if (res) {
+        if (res.openId) {
+          return {
+            code: 0,
+            data: {
+              count: 1
+            },
+            message: 'ok'
+          }
+        }
         const [count = 0] = await user.update({
           openId
         }, {

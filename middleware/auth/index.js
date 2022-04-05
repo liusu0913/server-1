@@ -1,5 +1,6 @@
-const { SECRET, VOID_TOKEN, LOGIN_EXPRESS } = require('~/const')
+const { SECRET, VOID_TOKEN, LOGIN_EXPRESS, USERDELETE } = require('~/const')
 const jwt = require('jsonwebtoken')
+const { user } = require('~/models')
 
 module.exports = function (ignoreApi = []) {
   return async (ctx, next) => {
@@ -10,6 +11,20 @@ module.exports = function (ignoreApi = []) {
     }
     try {
       const res = await jwt.verify(ctx.header.authorization.slice(7), SECRET)
+      const userInfo = await user.findOne({
+        where: {
+          jobId: res.jobId,
+          belongCompany: res.belongCompany
+        }
+      })
+      if (!userInfo || !Number(userInfo.status)) {
+        ctx.body = {
+          code: USERDELETE,
+          message: '该用户已经被封禁或者删除，请联系公司管理员'
+        }
+        return
+      }
+
       const superAdminIgnoreApi = [
         '/api/admin/user/info',
         '/api/admin/company/create',

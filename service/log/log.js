@@ -1,4 +1,4 @@
-const { pvLog, wxuser, user, shareLog, stayMsgLog, questionLog, stayTimeLog } = require('~/models')
+const { pvLog, user, shareLog, stayMsgLog, questionLog, stayTimeLog } = require('~/models')
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
 const wxUser = require('../admin/wxuser')
@@ -23,7 +23,7 @@ async function beforeHandle (data) {
       message: 'success'
     }
   }
-  const { sourceOpenId } = data
+  const { sourceOpenId, openId } = data
   if (sourceOpenId) {
     const isStaffSource = await isStaffInfo({
       openId: sourceOpenId,
@@ -32,6 +32,10 @@ async function beforeHandle (data) {
     if (isStaffSource) {
       delete data.sourceOpenId
     }
+  }
+  // 判断是不是自己分享自己打开
+  if (sourceOpenId === openId) {
+    delete data.sourceOpenId
   }
   return {
     ...data
@@ -61,6 +65,7 @@ module.exports = {
         data.company = ''
         data.name = ''
       }
+
       const result = await pvLog.create(data)
       return util.format.sucHandler(result)
     } catch (ex) {

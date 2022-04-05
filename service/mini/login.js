@@ -4,6 +4,7 @@ const { SECRET } = require('~/const')
 const jwt = require('jsonwebtoken')
 const mpOpenID = require('~/libs/weixin/login')
 const { sendSms } = require('~/libs/sms')
+const { USERBANNED } = require('~/const/index')
 
 module.exports = {
   async sendSms (body, ctx) {
@@ -36,6 +37,13 @@ module.exports = {
     if (!data) {
       throw new Error('工号或手机号错误')
     }
+    if (!Number(data.status)) {
+      return {
+        code: USERBANNED,
+        message: '用户已经被封禁，请联系公司管理员'
+      }
+    }
+
     const codeRedis = await redis.get(process.env.DEBUG + jobId + phone)
     if (codeRedis == null) {
       throw new Error('验证码失效')

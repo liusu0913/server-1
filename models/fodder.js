@@ -77,13 +77,31 @@ module.exports = sequelize => {
       field: "updated_at"
     },
     imgs: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(1000),
       allowNull: true,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
       comment: null,
       field: "imgs"
+    },
+    createId: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "创建人的job_id",
+      field: "create_id"
+    },
+    createCompanyCode: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "创建人的机构代码",
+      field: "create_company_code"
     }
   };
   const options = {

@@ -35,6 +35,7 @@ module.exports = {
       const { session_user } = ctx
       const { day } = data
       const where = {
+        jobId: session_user.jobId,
         belongCompany: session_user.belongCompany
       }
       if (day) {
@@ -43,21 +44,22 @@ module.exports = {
         }
       }
       const pv = await pvLog.count({
+        group: ['open_id'],
         where
       })
       const share = await shareLog.count({
         where
       })
-      const shareRes = await shareLog.count({
+      const shareActive = await pvLog.count({
         group: ['active_id'],
         where
       })
       return {
         code: 0,
         data: {
-          pv,
+          uv: pv.length,
           share,
-          shareActiveCount: shareRes.length
+          shareActiveCount: shareActive.length
         },
         message: 'success'
       }
@@ -78,6 +80,9 @@ module.exports = {
           where: {
             title: {
               [Op.like]: `%${search}%`
+            },
+            startTime: {
+              [Op.lte]: new Date()
             },
             belongCompany: session_user.belongCompany
           },
@@ -127,6 +132,9 @@ module.exports = {
             model: active,
             as: 'active',
             where: {
+              startTime: {
+                [Op.lte]: new Date()
+              },
               belongCompany: session_user.belongCompany
             },
             include: [{
