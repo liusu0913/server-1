@@ -26,6 +26,7 @@ module.exports = function (ignoreApi = []) {
       }
 
       const superAdminIgnoreApi = [
+        '/api/admin/company/info',
         '/api/admin/user/info',
         '/api/admin/company/create',
         '/api/admin/company/delete'
