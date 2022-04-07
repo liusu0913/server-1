@@ -1,6 +1,6 @@
 const { SECRET, VOID_TOKEN, LOGIN_EXPRESS, USERDELETE } = require('~/const')
 const jwt = require('jsonwebtoken')
-const { user } = require('~/models')
+const { user, company } = require('~/models')
 
 module.exports = function (ignoreApi = []) {
   return async (ctx, next) => {
@@ -11,30 +11,24 @@ module.exports = function (ignoreApi = []) {
     }
     try {
       const res = await jwt.verify(ctx.header.authorization.slice(7), SECRET)
-      const userInfo = await user.findOne({
-        where: {
-          jobId: res.jobId,
-          belongCompany: res.belongCompany
-        }
-      })
-      if (!userInfo || !Number(userInfo.status)) {
-        ctx.body = {
-          code: USERDELETE,
-          message: '该用户已经被封禁或者删除，请联系公司管理员'
-        }
-        return
-      }
 
       const superAdminIgnoreApi = [
-        '/api/admin/company/info',
         '/api/admin/user/info',
         '/api/admin/company/create',
-        '/api/admin/company/delete'
+        '/api/admin/company/delete',
+        '/api/admin/company/update',
+        '/api/admin/company/info'
       ]
       if (superAdminIgnoreApi.indexOf(ctx.url) === -1) {
         if (res.role === 0) {
           if (data.belongCompany) {
             res.belongCompany = data.belongCompany
+            const currentCompany = await company.findOne({
+              where: {
+                id: data.belongCompany
+              }
+            })
+            res.companyId = currentCompany.companyCode
           } else {
             ctx.body = {
               code: 1002,
@@ -42,6 +36,21 @@ module.exports = function (ignoreApi = []) {
             }
             return
           }
+        }
+      }
+      if (res.role) {
+        const userInfo = await user.findOne({
+          where: {
+            jobId: res.jobId,
+            belongCompany: res.belongCompany
+          }
+        })
+        if (!userInfo || !Number(userInfo.status)) {
+          ctx.body = {
+            code: USERDELETE,
+            message: '该用户已经被封禁或者删除，请联系公司管理员'
+          }
+          return
         }
       }
       ctx.session_user = res

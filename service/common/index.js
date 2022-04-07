@@ -2,7 +2,7 @@
 /* eslint-disable promise/param-names */
 const util = require('~/util')
 const { user } = require('~/models')
-const { SECRET, NO_REGISTER, LOGIN_PASSWORD_ERROR } = require('~/const')
+const { SECRET, NO_REGISTER, LOGIN_PASSWORD_ERROR, ACCESSERROR } = require('~/const')
 const jwt = require('jsonwebtoken')
 const STS = require('qcloud-cos-sts')
 // 获取临时密匙
@@ -46,6 +46,12 @@ module.exports = {
       }
     }
     const { data } = resP
+    if (data.role === 3) {
+      return {
+        code: ACCESSERROR,
+        message: '外勤员工暂无权限登录管理系统'
+      }
+    }
     const token = await jwt.sign({
       jobId: data.jobId,
       name: data.name,

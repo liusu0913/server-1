@@ -1,7 +1,7 @@
-const { wxuser, pvLog, shareLog, active, stayMsgLog } = require('~/models')
+const { wxuser, pvLog, shareLog, active, stayMsgLog, user } = require('~/models')
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
-const { Op } = require('sequelize')
+const { Op, where } = require('sequelize')
 
 function formatData (arr, activeList) {
   let count = 0
@@ -24,39 +24,45 @@ function formatData (arr, activeList) {
 }
 
 module.exports = {
-  async wxuser (data, ctx) {
+  async user (ctx) {
     try {
       const { session_user } = ctx
-      const allCount = await wxuser.count({
-        where: {
-          belongCompany: session_user.belongCompany
-        }
+      const where = {
+        companyId: {
+          [Op.like]: `${session_user.companyId}%`
+        },
+        role: 3,
+        status: '1',
+        belongCompany: session_user.belongCompany
+      }
+      const allCount = await user.count({
+        where
       })
-      const addCount = await wxuser.count({
+      const addCount = await user.count({
         where: {
-          belongCompany: session_user.belongCompany,
+          ...where,
           createdAt: {
             [Op.gte]: new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000)
           }
         }
       })
-      const phoneCount = await wxuser.count({
+      const loginCount = await user.count({
         where: {
-          phone: {
+          ...where,
+          openId: {
             [Op.ne]: null
-          },
-          belongCompany: session_user.belongCompany
+          }
         }
       })
-      const addPhoneCount = await wxuser.count({
+      const addLoginCount = await user.count({
         where: {
+          ...where,
           updatedAt: {
             [Op.gte]: new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000)
           },
-          phone: {
+          openId: {
             [Op.ne]: null
-          },
-          belongCompany: session_user.belongCompany
+          }
         }
       })
       return {
@@ -64,8 +70,8 @@ module.exports = {
         data: {
           allCount,
           addCount,
-          phoneCount,
-          addPhoneCount
+          loginCount,
+          addLoginCount
         },
         message: 'success'
       }

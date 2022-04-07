@@ -20,7 +20,6 @@ const get_page = async (access_token) => {
 
 const get_qrcode = async (access_token, page) => {
   const url = `https://api.weixin.qq.com/wxa/get_qrcode?access_token=${access_token}&path=${page}`
-  console.log('url', url)
   return axios({
     method: 'get',
     url,

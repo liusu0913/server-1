@@ -1,7 +1,6 @@
 const debug = require('debug')('rocket-node:app')
 
 module.exports = async function (ctx, next) {
-  console.log(ctx.url)
   const start = new Date()
   await next()
   const ms = new Date() - start

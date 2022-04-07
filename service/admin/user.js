@@ -30,7 +30,6 @@ const formatTree = (tree, item) => {
   if (item.companyId.indexOf(tree.companyId) === 0) {
     // 包含关系
     if (item.companyId.length - tree.companyId.length === 2) {
-      console.log(tree.company, item.company)
       // 直系子
       tree.children.push({
         company: item.company,
@@ -169,8 +168,16 @@ module.exports = {
     // 查找列表需要根据公司id的层级条件进行查找
     try {
       const { session_user } = ctx
+      const searchKey = ['name', 'jobId', 'phone']
       data = util.format.dataProcessor(data)
       const { where } = data
+      searchKey.forEach(key => {
+        if (where[key]) {
+          where[key] = {
+            [op.like]: `%${where[key]}%`
+          }
+        }
+      })
       const result = await user.findAndCountAll({
         ...data,
         where: {
@@ -317,6 +324,28 @@ module.exports = {
         code: 0,
         message: returmMsg || 'success'
       }
+    }
+  },
+  async userCount (ctx) {
+    // 查找列表需要根据公司id的层级条件进行查找
+    try {
+      const { session_user } = ctx
+      const { where } = {
+        belongCompany: session_user.belongCompany
+
+      }
+      const result = await user.findAndCountAll({
+        where
+      })
+      return {
+        code: 0,
+        data: {
+          all: result
+        }
+      }
+    } catch (ex) {
+      logger.error(`list|error:${ex.message}|stack:${ex.stack}`)
+      return util.format.errHandler(ex)
     }
   }
 }

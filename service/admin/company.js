@@ -29,6 +29,11 @@ module.exports = {
   },
   async update (data, where = {}) {
     try {
+      Object.keys(data).forEach(key => {
+        if (typeof data[key] !== 'string') {
+          data[key] = JSON.stringify(data[key])
+        }
+      })
       const [count = 0] = await company.update(data, { where })
       if (count > 0) {
         return util.format.sucHandler({ count })

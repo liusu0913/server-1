@@ -15,8 +15,11 @@ const USERBANNED = 10006
 const WXREPEAT = 10007
 // 用户不可用
 const USERDELETE = 10008
+// 无权限
+const ACCESSERROR = 10009
 
 module.exports = {
+  ACCESSERROR,
   USERDELETE,
   WXREPEAT,
   USERBANNED,

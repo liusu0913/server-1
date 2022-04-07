@@ -132,3 +132,11 @@ exports.batchAdd = async (ctx) => {
     ctx.body = util.format.errHandler(error)
   }
 }
+
+exports.userCount = async (ctx) => {
+  try {
+    ctx.body = await service.list(ctx)
+  } catch (error) {
+    ctx.body = util.format.errHandler(error)
+  }
+}
