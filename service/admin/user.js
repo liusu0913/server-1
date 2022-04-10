@@ -30,6 +30,10 @@ const formatTree = (tree, item) => {
   if (item.companyId.indexOf(tree.companyId) === 0) {
     // 包含关系
     if (item.companyId.length - tree.companyId.length === 2) {
+      const hasCompany = tree.children.filter((company) => {
+        return company.companyId === item.companyId
+      })
+      if (hasCompany.length) return
       // 直系子
       tree.children.push({
         company: item.company,
