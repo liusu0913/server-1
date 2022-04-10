@@ -26,7 +26,15 @@ module.exports = {
     try {
       const { session_user } = ctx
       data = util.format.dataProcessor(data)
+      const searchArr = ['title', 'fodderId']
       const { where } = data
+      searchArr.forEach(key => {
+        if (where[key]) {
+          where[key] = {
+            [Op.like]: `${where[key]}%`
+          }
+        }
+      })
       const result = await fodder.findAndCountAll({
         ...data,
         order: [['updatedAt', 'DESC']],

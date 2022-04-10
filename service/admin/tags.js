@@ -1,4 +1,4 @@
-const { tags } = require('~/models')
+const { tags, activeTags, fodderTag } = require('~/models')
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
 
@@ -35,11 +35,26 @@ module.exports = {
   async delete (where, ctx) {
     try {
       const { session_user } = ctx
+      const { id } = where
       where = {
         ...where,
         belongCompany: session_user.belongCompany
       }
       const count = await tags.destroy({ where })
+      const childTags = await tags.findAll({
+        where: {
+          fatherId: id
+        }
+      })
+      await activeTags.destroy({ where: { tagId: id } })
+      await fodderTag.destroy({ where: { tagId: id } })
+      if (childTags.length) {
+        for (let i = 0; i < childTags.length; i++) {
+          await this.delete({
+            id: childTags[i].id
+          }, ctx)
+        }
+      }
       if (count > 0) {
         return util.format.sucHandler({ count })
       } else {

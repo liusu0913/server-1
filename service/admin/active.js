@@ -25,7 +25,15 @@ module.exports = {
     try {
       const { session_user } = ctx
       data = util.format.dataProcessor(data)
+      const searchArr = ['title', 'activeId']
       const { where } = data
+      searchArr.forEach(key => {
+        if (where[key]) {
+          where[key] = {
+            [Op.like]: `${where[key]}%`
+          }
+        }
+      })
       const result = await active.findAndCountAll({
         ...data,
         where: {
