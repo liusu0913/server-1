@@ -64,7 +64,6 @@ module.exports = {
         message: 'success'
       }
     } catch (error) {
-
     }
   },
   async list (data, ctx) {

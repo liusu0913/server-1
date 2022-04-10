@@ -124,8 +124,11 @@ module.exports = {
       })
       rank.sort((a, b) => b.count - a.count)
       const index = rank.findIndex(item => item.openId === where.openId)
-      const effectCount = await pvLog.count({
-        where
+      const effectCount = await wxuser.count({
+        where: {
+          sourceOpenId: where.openId,
+          belongCompany: session_user.belongCompany
+        }
       })
       const pvList = await pvLog.findAll({
         where: {
@@ -141,6 +144,7 @@ module.exports = {
         return {
           code: res.code,
           data: {
+            where,
             finer: Math.floor(((rank.length - index) / rank.length) * 100),
             openId,
             name,

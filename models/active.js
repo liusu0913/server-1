@@ -147,6 +147,15 @@ module.exports = sequelize => {
       autoIncrement: false,
       comment: "创建人的机构代码",
       field: "create_company_code"
+    },
+    userTags: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "user_tags"
     }
   };
   const options = {

@@ -1,7 +1,7 @@
-const { wxuser, pvLog, shareLog, active, stayMsgLog, user } = require('~/models')
+const { pvLog, shareLog, active, stayMsgLog, user } = require('~/models')
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
-const { Op, where } = require('sequelize')
+const { Op } = require('sequelize')
 
 function formatData (arr, activeList) {
   let count = 0

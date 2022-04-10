@@ -211,65 +211,64 @@ module.exports = {
     }
   },
 
-  async tags (body) {
+  async tags (body, ctx) {
+    const { session_user } = ctx
     const openId = body.openId
-    const date = new Date()
-    date.setDate(date.getDate() - 7)
-    const sevenDaysAgo = date.toISOString().slice(0, 10)
-    date.setDate(date.getDate() - 23)
-    const thirtyDaysAgo = date.toISOString().slice(0, 10)
-    const stayTime = await sequelize.query(`select sum(stay_time) > 30 as stayTime
-                                            from stayTimeLog
-                                            where open_id = ? and date (updated_at) > ?`,
-    {
-      replacements: [openId, sevenDaysAgo],
-      type: QueryTypes.SELECT
-    })
-    const question = await sequelize.query(`select 1
-                                            from questionLog
-                                            where open_id = ? and date (updated_at) > ?`,
-    {
-      replacements: [openId, sevenDaysAgo],
-      type: QueryTypes.SELECT
-    })
-    const share = await sequelize.query(`select 1
-                                         from pvLog
-                                         where source_open_id = ? and date (updated_at) > ?`,
-    {
-      replacements: [openId, thirtyDaysAgo],
-      type: QueryTypes.SELECT
-    })
-    const data = {
-      commend: stayTime[0].stayTime === 1 || question.length > 0 || share.length > 0
+
+    const where = {
+      openId: openId,
+      belongCompany: session_user.belongCompany
     }
-    const phone = await sequelize.query(`select 1
-                                         from stayMsgLog
-                                         where open_id = ?`,
-    {
-      replacements: [openId],
-      type: QueryTypes.SELECT
+
+    let pvRecord = await pvLog.count({
+      group: ['active_id'],
+      where
     })
-    data.regular = phone.length > 0
-    const shareBiggerThan2 = await sequelize.query(`select count(*) > 2
-                                                    from pvLog
-                                                    where source_open_id = ? and date (updated_at) > ?`,
-    {
-      replacements: [openId, sevenDaysAgo],
-      type: QueryTypes.SELECT
+
+    pvRecord.sort((a, b) => {
+      return b.count - a.count
     })
-    const sharePhone = await sequelize.query(`select 1
-                                              from pvLog
-                                              where source_open_id = ?
-                                                and open_id in (select distinct open_id from stayMsgLog)`,
-    {
-      replacements: [openId, sevenDaysAgo],
-      type: QueryTypes.SELECT
+
+    pvRecord = pvRecord.slice(0, 3)
+    const tagMap = {}
+
+    for (let i = 0; i < pvRecord.length; i++) {
+      const pv = pvRecord[i]
+      const activeInfo = await active.findOne({
+        where: {
+          activeId: pv.active_id,
+          belongCompany: session_user.belongCompany
+        }
+      })
+      const { userTags } = activeInfo
+      if (userTags) {
+        const tags = JSON.parse(userTags)
+        tags.forEach(tag => {
+          if (tagMap[tag]) {
+            tagMap[tag] = pv.count + tagMap[tag]
+          } else {
+            tagMap[tag] = pv.count
+          }
+        })
+      }
+    }
+
+    const tagRank = []
+
+    Object.keys(tagMap).forEach((key) => {
+      tagRank.push({
+        tag: key,
+        count: tagMap[key]
+      })
     })
-    data.share = shareBiggerThan2 === 1 || sharePhone.length > 0
+    tagRank.sort((a, b) => {
+      return b.count - a.count
+    })
+
     return {
       code: 0,
       message: 'success',
-      data: data
+      data: tagRank.slice(0, 3)
     }
   }
 }

@@ -83,6 +83,9 @@ module.exports = {
         data.createId = session_user.jobId
         data.createCompanyCode = session_user.companyId
       }
+      if (data.userTags) {
+        data.userTags = JSON.stringify(data.userTags)
+      }
       const result = await active.create(data)
       return util.format.sucHandler(result)
     } catch (ex) {
@@ -96,6 +99,9 @@ module.exports = {
       where = {
         ...where,
         belongCompany: session_user.belongCompany
+      }
+      if (data.userTags) {
+        data.userTags = JSON.stringify(data.userTags)
       }
       const [count = 0] = await active.update(data, { where })
       if (count > 0) {
