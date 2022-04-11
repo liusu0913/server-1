@@ -5,12 +5,12 @@ const logger = require('~/util/logger')(__filename)
 module.exports = {
   async list (data, ctx) {
     try {
-      const { session_user } = ctx
+      // const { session_user } = ctx
       data = util.format.dataProcessor(data)
       const result = await activeBiffuse.findAndCountAll({
         ...data,
         where: {
-          belongCompany: session_user.belongCompany
+          // belongCompany: session_user.belongCompany
         }
       })
       return util.format.sucHandler(result, 'list')

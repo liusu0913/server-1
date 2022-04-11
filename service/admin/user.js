@@ -106,6 +106,11 @@ module.exports = {
       return {
         code: 0,
         data: {
+          where: {
+            role,
+            companyId,
+            belongCompany: session_user.belongCompany
+          },
           list: result
         },
         message: 'success'
@@ -204,16 +209,20 @@ module.exports = {
       if (session_user.role) {
         data.belongCompany = session_user.belongCompany
       }
-      if (session_user.role >= data.role) {
-        return {
-          code: 1002,
-          message: `权限错误：role为${session_user.role}级用户只能创建 ${session_user.role + 1} - 3级用户`
-        }
-      }
-      if (session_user.role > 1) {
-        return {
-          code: 1002,
-          message: '权限错误：没有权限创建用户信息'
+      if (data.companyId.indexOf(session_user.companyId) !== 0) {
+        if (
+          session_user.companyId.indexOf(data.companyId) === 0 &&
+          data.companyId.length < session_user.companyId.length
+        ) {
+          return {
+            code: 1002,
+            message: '权限错误：不能创建上层公司员工'
+          }
+        } else {
+          return {
+            code: 1002,
+            message: '权限错误：不能其他分机构的员工'
+          }
         }
       }
       const result = await user.create(data)
