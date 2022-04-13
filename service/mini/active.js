@@ -108,7 +108,7 @@ module.exports = {
             model: activeType,
             as: 'type',
             where: {
-              belongCompany: session_user.belongCompany
+              // belongCompany: session_user.belongCompany
             },
             required: false
           }]
@@ -158,7 +158,7 @@ module.exports = {
               model: activeType,
               as: 'type',
               where: {
-                belongCompany: session_user.belongCompany
+                // belongCompany: session_user.belongCompany
               },
               required: false
             }]
