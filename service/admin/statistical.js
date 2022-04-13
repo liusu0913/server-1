@@ -85,13 +85,19 @@ module.exports = {
       const { session_user } = ctx
       const activeCount = await active.count({
         where: {
-          belongCompany: session_user.belongCompany
+          belongCompany: session_user.belongCompany,
+          createCompanyCode: {
+            [Op.like]: `${session_user.companyId}%`
+          }
         }
       })
       const addActiveCount = await active.count({
         where: {
           createdAt: {
             [Op.gte]: new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000)
+          },
+          createCompanyCode: {
+            [Op.like]: `${session_user.companyId}%`
           },
           belongCompany: session_user.belongCompany
         }
@@ -102,7 +108,10 @@ module.exports = {
         attributes: ['open_id'],
         group: ['open_id'],
         where: {
-          belongCompany: session_user.belongCompany
+          belongCompany: session_user.belongCompany,
+          companyId: {
+            [Op.like]: `${session_user.companyId}%`
+          }
         }
       })
       pvRes.forEach(item => {
@@ -115,6 +124,9 @@ module.exports = {
           createdAt: {
             [Op.gte]: new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000)
           },
+          companyId: {
+            [Op.like]: `${session_user.companyId}%`
+          },
           belongCompany: session_user.belongCompany
         }
       })
@@ -123,11 +135,17 @@ module.exports = {
       })
       const shareCount = await shareLog.count({
         where: {
-          belongCompany: session_user.belongCompany
+          belongCompany: session_user.belongCompany,
+          companyId: {
+            [Op.like]: `${session_user.companyId}%`
+          }
         }
       })
       const addShareCount = await shareLog.count({
         where: {
+          companyId: {
+            [Op.like]: `${session_user.companyId}%`
+          },
           createdAt: {
             [Op.gte]: new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000)
           },
@@ -158,7 +176,10 @@ module.exports = {
       const { session_user } = ctx
       const { day } = data
       const searchRule = {
-        belongCompany: session_user.belongCompany
+        belongCompany: session_user.belongCompany,
+        companyId: {
+          [Op.like]: `${session_user.companyId}%`
+        }
       }
       if (day) {
         searchRule.createdAt = {
@@ -208,7 +229,10 @@ module.exports = {
       const { session_user } = ctx
       const { day } = data
       const searchRule = {
-        belongCompany: session_user.belongCompany
+        belongCompany: session_user.belongCompany,
+        companyId: {
+          [Op.like]: `${session_user.companyId}%`
+        }
       }
       if (day) {
         searchRule.createdAt = {

@@ -78,12 +78,10 @@ module.exports = {
     try {
       data.activeId = util.user.createUID()
       const { session_user } = ctx
-      if (session_user.role) {
-        data.belongCompany = session_user.belongCompany
-        data.createId = session_user.jobId
-        data.createCompanyCode = session_user.companyId
-      }
-      if (data.userTags) {
+      data.belongCompany = session_user.belongCompany
+      data.createId = session_user.jobId
+      data.createCompanyCode = session_user.companyId
+      if (data.userTags && Array.isArray(data.userTags)) {
         data.userTags = JSON.stringify(data.userTags)
       }
       const result = await active.create(data)
