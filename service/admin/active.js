@@ -38,7 +38,10 @@ module.exports = {
         ...data,
         where: {
           ...where,
-          belongCompany: session_user.belongCompany
+          belongCompany: session_user.belongCompany,
+          createCompanyCode: {
+            [Op.like]: `${session_user.companyId}%`
+          }
         },
         distinct: true,
         include: [{

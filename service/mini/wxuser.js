@@ -81,7 +81,29 @@ module.exports = {
           }]
         }]
       })
-      return util.format.sucHandler(result, 'list')
+      const { rows } = result
+      const list = []
+      for (let i = 0; i < rows.length; i++) {
+        const user = JSON.parse(JSON.stringify(rows[i]))
+        if (user.sourceOpenId) {
+          const sourceUser = await wxuser.findOne({
+            belongCompany: session_user.belongCompany,
+            openId: user.sourceOpenId
+          })
+          if (sourceUser) {
+            user.sourceUser = sourceUser
+          }
+        }
+        list.push(user)
+      }
+      return {
+        code: 0,
+        data: {
+          count: list.length,
+          list
+        },
+        message: 'success'
+      }
     } catch (ex) {
       logger.error(`list|error:${ex.message}|stack:${ex.stack}`)
       return util.format.errHandler(ex)
