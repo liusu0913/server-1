@@ -3,6 +3,14 @@ const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
 const { Op } = require('sequelize')
 
+function getInArr (id) {
+  const inArr = []
+  for (let i = 0; i < id.length; i++) {
+    inArr.push(id.slice(0, i + 1))
+  }
+  return inArr
+}
+
 module.exports = {
   async batchDelete (data, ctx) {
     try {
@@ -34,13 +42,17 @@ module.exports = {
           }
         }
       })
+
       const result = await active.findAndCountAll({
         ...data,
         where: {
           ...where,
           belongCompany: session_user.belongCompany,
           createCompanyCode: {
-            [Op.like]: `${session_user.companyId}%`
+            [Op.or]: {
+              [Op.like]: `${session_user.companyId}%`,
+              [Op.in]: getInArr(session_user.companyId)
+            }
           }
         },
         distinct: true,

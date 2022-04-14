@@ -1,4 +1,4 @@
-const { pvLog, shareLog, stayMsgLog, wxuser, active } = require('~/models')
+const { pvLog, user, shareLog, stayMsgLog, wxuser, active } = require('~/models')
 const redis = require('~/libs/redis')
 const { Op } = require('sequelize')
 const util = require('~/util')
@@ -65,7 +65,8 @@ module.exports = {
       const companyData = {}
       const list = []
       let pv = 0
-      dataList.forEach((item) => {
+      for (let i = 0; i < dataList.length; i++) {
+        const item = dataList[i]
         pv += item.count
         if (type === 1) {
           if (companyData[item.company_id]) {
@@ -90,9 +91,18 @@ module.exports = {
             companyData[item.job_id].viewData.uv += 1
             companyData[item.job_id].viewData.openIds.push(item.open_id)
           } else {
+            let satffInfo = await user.findOne({
+              where: {
+                jobId: item.job_id,
+                belongCompany: session_user.belongCompany
+              }
+            })
+            if (!satffInfo) {
+              satffInfo = {}
+            }
             companyData[item.job_id] = {}
             companyData[item.job_id].jobId = item.job_id
-            companyData[item.job_id].staffName = item.name
+            companyData[item.job_id].staffName = satffInfo.name || '-'
             companyData[item.job_id].companyId = item.company_id
             companyData[item.job_id].company = item.company
             companyData[item.job_id].viewData = {
@@ -104,7 +114,7 @@ module.exports = {
             companyData[item.job_id].stayMsgData = getLogData('job_id', item.job_id, stayMsgList)
           }
         }
-      })
+      }
       Object.keys(companyData).forEach(id => {
         list.push(companyData[id])
       })
@@ -139,21 +149,30 @@ module.exports = {
         where,
         distinct: true,
         order: [['createdAt', 'ASC']],
-        include: [{
-          attributes: ['name'],
-          model: wxuser,
-          where: {
-            belongCompany: session_user.belongCompany
+        include: [
+          {
+            attributes: ['name'],
+            model: user,
+            where: {
+              belongCompany: session_user.belongCompany
+            },
+            as: 'staff'
           },
-          as: 'user'
-        }, {
-          attributes: ['title'],
-          model: active,
-          where: {
-            belongCompany: session_user.belongCompany
-          },
-          as: 'active'
-        }]
+          {
+            attributes: ['name'],
+            model: wxuser,
+            where: {
+              belongCompany: session_user.belongCompany
+            },
+            as: 'user'
+          }, {
+            attributes: ['title'],
+            model: active,
+            where: {
+              belongCompany: session_user.belongCompany
+            },
+            as: 'active'
+          }]
       })
       const stayMsgRes = await stayMsgLog.findAll({
         where
@@ -172,7 +191,7 @@ module.exports = {
           data.companyId = pv.companyId
           data.companyName = pv.company
           data.jobId = pv.jobId
-          data.staffName = pv.name
+          data.staffName = pv.staff.name || '-'
           data.nickName = pv.user ? pv.user.name || '' : ''
           data.startTime = pv.createdAt
           data.endTime = pv.createdAt
@@ -242,5 +261,4 @@ module.exports = {
       return util.format.errHandler(ex)
     }
   }
-
 }
