@@ -1,4 +1,4 @@
-const { user } = require('~/models')
+const { user, fodder, active, wxuser, pvLog, shareLog, questionLog, stayMsgLog, stayTimeLog } = require('~/models')
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
 const xlsx = require('xlsx')
@@ -250,9 +250,62 @@ module.exports = {
       return util.format.errHandler(ex)
     }
   },
-  async delete ({ where }, ctx) {
+  async delete ({ where }, data, ctx) {
     try {
       const { session_user } = ctx
+      const { jobId } = where
+      const { transToJobId } = data
+      const userInfo = await user.findOne({
+        where: {
+          jobId: transToJobId,
+          belongCompany: session_user.belongCompany
+        }
+      })
+
+      if (!userInfo) {
+        return {
+          code: 1002,
+          message: `未查找到工号为《${transToJobId}》的员工`
+        }
+      } else {
+        const logWhere = {
+          jobId,
+          belongCompany: session_user.belongCompany
+        }
+        const logData = {
+          jobId: transToJobId,
+          name: userInfo.name,
+          companyId: userInfo.companyId,
+          company: userInfo.company
+        }
+        pvLog.update(logData, { where: logWhere })
+        shareLog.update(logData, { where: logWhere })
+        questionLog.update(logData, { where: logWhere })
+        stayMsgLog.update(logData, { where: logWhere })
+        stayTimeLog.update(logData, { where: logWhere })
+        wxuser.update({
+          sourceJobId: transToJobId
+        }, {
+          where: {
+            sourceJobId: jobId,
+            belongCompany: session_user.belongCompany
+          }
+        })
+        const contentData = {
+          createCompanyCode: userInfo.companyId,
+          createId: transToJobId
+        }
+        const contentWhere = {
+          createId: jobId,
+          belongCompany: session_user.belongCompany
+        }
+        fodder.update(contentData, {
+          where: contentWhere
+        })
+        active.update(contentData, {
+          where: contentWhere
+        })
+      }
       where = {
         ...where,
         belongCompany: session_user.belongCompany

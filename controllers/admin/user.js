@@ -87,13 +87,15 @@ exports.active = async (ctx) => {
 exports.delete = async (ctx) => {
   try {
     const data = ctx.request.body
-    const { jobId } = data
+    const { jobId, transToJobId } = data
     await util.validator.check(schema, 'delete', data)
     ctx.body = await service.delete({
       where: {
         jobId
       }
-    }, ctx)
+    },
+    { transToJobId },
+    ctx)
   } catch (error) {
     ctx.body = util.format.errHandler(error)
   }

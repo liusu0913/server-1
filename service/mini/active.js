@@ -33,6 +33,7 @@ function forMatActiveData (active, uv, share, stayMsg) {
     type: active.type,
     diffuseTypeId: active.diffuseTypeId,
     startTime: active.startTime,
+    endTime: active.endTime,
     createdAt: active.createdAt,
     updatedAt: active.updatedAt
   }
@@ -89,8 +90,8 @@ module.exports = {
             title: {
               [Op.like]: `%${search}%`
             },
-            startTime: {
-              [Op.lte]: new Date()
+            endTime: {
+              [Op.is]: null
             },
             createCompanyCode: {
               [Op.or]: {
@@ -146,8 +147,14 @@ module.exports = {
             model: active,
             as: 'active',
             where: {
-              startTime: {
-                [Op.lte]: moment(new Date()).utcOffset(8)
+              endTime: {
+                [Op.is]: null
+              },
+              createCompanyCode: {
+                [Op.or]: {
+                  [Op.like]: `${session_user.companyId}%`,
+                  [Op.in]: getInArr(session_user.companyId)
+                }
               },
               belongCompany: session_user.belongCompany
             },
@@ -203,7 +210,8 @@ module.exports = {
         code: 0,
         data: {
           list,
-          count
+          count,
+          session_user
         },
         message: 'success'
       }

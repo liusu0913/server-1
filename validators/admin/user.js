@@ -31,7 +31,7 @@ module.exports = {
     require: ['jobId', 'status']
   },
   delete: {
-    required: ['jobId']
+    required: ['jobId', 'transToJobId']
   },
   info: {
     required: []
@@ -43,6 +43,9 @@ module.exports = {
   schema: {
     type: 'object',
     properties: {
+      transToJobId: {
+        type: 'string'
+      },
       jobIds: {
         tyep: 'array'
       },
