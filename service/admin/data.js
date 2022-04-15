@@ -4,6 +4,7 @@ const { Op } = require('sequelize')
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
 const nodeXlsx = require('node-xlsx')
+const moment = require('moment')
 
 function getLogData (flag, key, arr) {
   const dataArr = arr.filter((data) => data[flag] === key)
@@ -241,8 +242,8 @@ module.exports = {
       }
       const xlsxData = []
       list.forEach((item) => {
-        item.endTime = util.date.format(item.endTime)
-        item.startTime = util.date.format(item.startTime)
+        item.endTime = moment(item.endTime).format('YYYY-MM-DD HH:mm:ss')
+        item.startTime = moment(item.startTime).format('YYYY-MM-DD HH:mm:ss')
         xlsxData.push([item.activeId, item.activeName, item.companyId, item.companyName, item.jobId, item.staffName, item.nickName, item.name, item.phone, item.startTime, item.endTime])
       })
       xlsxData.unshift(['活动ID', '活动名称', '机构代码', '机构名称', '代理人工号', '代理人', '客户微信昵称', '客户姓名', '客户电话', '首次进入时间', '最后进入时间'])
