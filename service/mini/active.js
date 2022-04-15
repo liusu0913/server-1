@@ -3,6 +3,15 @@ const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
 const { Op } = require('sequelize')
 
+const moment = require('moment')
+function getInArr (id) {
+  const inArr = []
+  for (let i = 0; i < id.length; i++) {
+    inArr.push(id.slice(0, i + 1))
+  }
+  return inArr
+}
+
 function forMatActiveData (active, uv, share, stayMsg) {
   const tags = []
   active.tags.forEach((tag) => {
@@ -83,6 +92,12 @@ module.exports = {
             startTime: {
               [Op.lte]: new Date()
             },
+            createCompanyCode: {
+              [Op.or]: {
+                [Op.like]: `${session_user.companyId}%`,
+                [Op.in]: getInArr(session_user.companyId)
+              }
+            },
             belongCompany: session_user.belongCompany
           },
           distinct: true,
@@ -132,7 +147,7 @@ module.exports = {
             as: 'active',
             where: {
               startTime: {
-                [Op.lte]: new Date()
+                [Op.lte]: moment(new Date()).utcOffset(8)
               },
               belongCompany: session_user.belongCompany
             },

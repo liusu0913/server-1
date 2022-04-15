@@ -3,6 +3,14 @@ const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
 const { Op } = require('sequelize')
 
+function getInArr (id) {
+  const inArr = []
+  for (let i = 0; i < id.length; i++) {
+    inArr.push(id.slice(0, i + 1))
+  }
+  return inArr
+}
+
 module.exports = {
   async list (data, ctx) {
     try {
@@ -15,7 +23,17 @@ module.exports = {
       let code = 0
       let message = ''
       data = util.format.dataProcessor(data)
-      const { where } = data
+      let { where } = data
+      where = {
+        ...where,
+        createCompanyCode: {
+          [Op.or]: {
+            [Op.like]: `${session_user.companyId}%`,
+            [Op.in]: getInArr(session_user.companyId)
+          }
+        },
+        belongCompany: session_user.belongCompany
+      }
       if (search) {
         const result = await fodder.findAndCountAll({
           ...data,
@@ -24,8 +42,7 @@ module.exports = {
             ...where,
             title: {
               [Op.like]: `%${search}%`
-            },
-            belongCompany: session_user.belongCompany
+            }
           },
           distinct: true,
           include: [{
@@ -53,8 +70,7 @@ module.exports = {
           ...data,
           order: [['updatedAt', 'DESC']],
           where: {
-            ...where,
-            belongCompany: session_user.belongCompany
+            ...where
           },
           distinct: true,
           include: [{
