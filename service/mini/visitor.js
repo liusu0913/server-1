@@ -34,7 +34,7 @@ module.exports = {
       message: 'success',
       data: {
         total,
-        yesterday,
+        yesterday: (yesterday - today),
         today
       }
     }
