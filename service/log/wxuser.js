@@ -61,6 +61,9 @@ module.exports = {
           if (wxuserInfo.sourceOpenId) {
             delete data.sourceOpenId
           }
+          if (wxuserInfo.name && data.name) {
+            delete data.name
+          }
           await wxuser.update(data, {
             where: {
               openId: data.openId,
