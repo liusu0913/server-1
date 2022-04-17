@@ -17,6 +17,7 @@ function forMatActiveData (active) {
     title: active.title,
     url: active.url,
     img: active.img,
+    activeUse: active.activeUse,
     tags,
     type: active.type,
     diffuseTypeId: active.diffuseTypeId,

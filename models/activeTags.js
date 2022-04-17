@@ -59,7 +59,7 @@ module.exports = sequelize => {
       field: "belong_company"
     },
     disabled: {
-      type: DataTypes.ENUM('0', '1'),
+      type: DataTypes.ENUM('1', '0'),
       allowNull: false,
       defaultValue: "1",
       primaryKey: false,
