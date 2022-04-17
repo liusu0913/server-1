@@ -5,7 +5,7 @@ const config = require(envPath)
 const { mysql = '' } = config
 
 if (mysql) {
-  console.log(mysql)
+  // console.log(mysql)
   module.exports = {
     dbOptions: mysql,
     options: {

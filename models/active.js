@@ -154,8 +154,17 @@ module.exports = sequelize => {
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
-      comment: null,
+      comment: "创建人输入的标签",
       field: "user_tags"
+    },
+    disabled: {
+      type: DataTypes.ENUM('0', '1'),
+      allowNull: false,
+      defaultValue: "1",
+      primaryKey: false,
+      autoIncrement: false,
+      comment: "数据是否删除",
+      field: "disabled"
     }
   };
   const options = {

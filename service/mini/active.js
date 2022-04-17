@@ -2,8 +2,6 @@ const { active, tags, activeType, activeTags, pvLog, shareLog, stayMsgLog } = re
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
 const { Op } = require('sequelize')
-
-const moment = require('moment')
 function getInArr (id) {
   const inArr = []
   for (let i = 0; i < id.length; i++) {
@@ -46,7 +44,8 @@ module.exports = {
       const { day } = data
       const where = {
         jobId: session_user.jobId,
-        belongCompany: session_user.belongCompany
+        belongCompany: session_user.belongCompany,
+        disabled: '1'
       }
       if (day) {
         where.createdAt = {
@@ -99,7 +98,8 @@ module.exports = {
                 [Op.in]: getInArr(session_user.companyId)
               }
             },
-            belongCompany: session_user.belongCompany
+            belongCompany: session_user.belongCompany,
+            disabled: '1'
           },
           distinct: true,
           include: [{
@@ -141,6 +141,7 @@ module.exports = {
           ...data,
           where: {
             ...where,
+            disabled: '1',
             belongCompany: session_user.belongCompany
           },
           include: [{
@@ -150,6 +151,7 @@ module.exports = {
               endTime: {
                 [Op.is]: null
               },
+              disabled: '1',
               createCompanyCode: {
                 [Op.or]: {
                   [Op.like]: `${session_user.companyId}%`,

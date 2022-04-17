@@ -11,7 +11,6 @@ module.exports = function config (args) {
   const cfg = require('../config/config')
   // 获取当前的环境
   const env = process.env.ROCKET_ENV || 'development'
-  console.log(process.env.ROCKET_ENV)
 
   // 获取环境配置
   const envPath = path.resolve(`./config/config.${env}.js`)

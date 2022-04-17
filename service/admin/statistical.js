@@ -13,7 +13,7 @@ function formatData (arr, activeList) {
     const nameList = activeList.filter((active) => {
       return item.active_id === active.activeId
     })[0]
-    obj.name = nameList ? nameList.title : '其他'
+    obj.name = nameList ? nameList.title : '未知活动'
     obj.count = item.count
     list.push(obj)
   })
@@ -21,6 +21,14 @@ function formatData (arr, activeList) {
     list,
     count
   }
+}
+
+function getInArr (id) {
+  const inArr = []
+  for (let i = 0; i < id.length; i++) {
+    inArr.push(id.slice(0, i + 1))
+  }
+  return inArr
 }
 
 module.exports = {
@@ -83,36 +91,40 @@ module.exports = {
   async active (data, ctx) {
     try {
       const { session_user } = ctx
-      const activeCount = await active.count({
-        where: {
-          belongCompany: session_user.belongCompany,
-          createCompanyCode: {
-            [Op.like]: `${session_user.companyId}%`
+      const where = {
+        disabled: '1',
+        createCompanyCode: {
+          [Op.or]: {
+            [Op.like]: `${session_user.companyId}%`,
+            [Op.in]: getInArr(session_user.companyId)
           }
-        }
+        },
+        belongCompany: session_user.belongCompany
+      }
+      const activeCount = await active.count({
+        where
       })
       const addActiveCount = await active.count({
         where: {
+          ...where,
           createdAt: {
             [Op.gte]: new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000)
-          },
-          createCompanyCode: {
-            [Op.like]: `${session_user.companyId}%`
-          },
-          belongCompany: session_user.belongCompany
+          }
         }
       })
       let pv = 0
       let addPv = 0
+      const logWhere = {
+        belongCompany: session_user.belongCompany,
+        disabled: '1',
+        companyId: {
+          [Op.like]: `${session_user.companyId}%`
+        }
+      }
       const pvRes = await pvLog.count({
         attributes: ['open_id'],
         group: ['open_id'],
-        where: {
-          belongCompany: session_user.belongCompany,
-          companyId: {
-            [Op.like]: `${session_user.companyId}%`
-          }
-        }
+        where: logWhere
       })
       pvRes.forEach(item => {
         pv += item.count
@@ -121,35 +133,24 @@ module.exports = {
         attributes: ['open_id'],
         group: ['open_id'],
         where: {
+          ...logWhere,
           createdAt: {
             [Op.gte]: new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000)
-          },
-          companyId: {
-            [Op.like]: `${session_user.companyId}%`
-          },
-          belongCompany: session_user.belongCompany
+          }
         }
       })
       addPvRes.forEach(item => {
         addPv += item.count
       })
       const shareCount = await shareLog.count({
-        where: {
-          belongCompany: session_user.belongCompany,
-          companyId: {
-            [Op.like]: `${session_user.companyId}%`
-          }
-        }
+        where: logWhere
       })
       const addShareCount = await shareLog.count({
         where: {
-          companyId: {
-            [Op.like]: `${session_user.companyId}%`
-          },
+          ...logWhere,
           createdAt: {
             [Op.gte]: new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000)
-          },
-          belongCompany: session_user.belongCompany
+          }
         }
       })
       return {
@@ -176,6 +177,7 @@ module.exports = {
       const { session_user } = ctx
       const { day } = data
       const searchRule = {
+        disabled: '1',
         belongCompany: session_user.belongCompany,
         companyId: {
           [Op.like]: `${session_user.companyId}%`
@@ -188,6 +190,13 @@ module.exports = {
       }
       const activeList = await active.findAll({
         where: {
+          disabled: '1',
+          createCompanyCode: {
+            [Op.or]: {
+              [Op.like]: `${session_user.companyId}%`,
+              [Op.in]: getInArr(session_user.companyId)
+            }
+          },
           belongCompany: session_user.belongCompany
         }
       })
@@ -229,6 +238,7 @@ module.exports = {
       const { session_user } = ctx
       const { day } = data
       const searchRule = {
+        disabled: '1',
         belongCompany: session_user.belongCompany,
         companyId: {
           [Op.like]: `${session_user.companyId}%`
@@ -241,6 +251,13 @@ module.exports = {
       }
       const activeList = await active.findAll({
         where: {
+          disabled: '1',
+          createCompanyCode: {
+            [Op.or]: {
+              [Op.like]: `${session_user.companyId}%`,
+              [Op.in]: getInArr(session_user.companyId)
+            }
+          },
           belongCompany: session_user.belongCompany
         }
       })

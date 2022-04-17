@@ -57,6 +57,15 @@ module.exports = sequelize => {
       autoIncrement: false,
       comment: null,
       field: "updated_at"
+    },
+    disabled: {
+      type: DataTypes.ENUM('1', '0'),
+      allowNull: false,
+      defaultValue: "1",
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "disabled"
     }
   };
   const options = {

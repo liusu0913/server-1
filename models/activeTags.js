@@ -57,6 +57,15 @@ module.exports = sequelize => {
       autoIncrement: false,
       comment: null,
       field: "belong_company"
+    },
+    disabled: {
+      type: DataTypes.ENUM('0', '1'),
+      allowNull: false,
+      defaultValue: "1",
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "disabled"
     }
   };
   const options = {

@@ -34,6 +34,7 @@ async function getTime (where) {
 }
 
 async function getRemindCount (where, time = 0) {
+  where.disabled = '1'
   const all = await activeRemind.count({
     where
   })
@@ -109,6 +110,7 @@ module.exports = {
         order: [['updatedAt', 'ASC']],
         where: {
           ...where,
+          disabled: '1',
           jobId: session_user.jobId,
           belongCompany: session_user.belongCompany
         },
@@ -116,6 +118,7 @@ module.exports = {
           model: active,
           as: 'active',
           where: {
+            disabled: '1',
             belongCompany: session_user.belongCompany
           },
           include: [{

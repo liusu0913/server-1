@@ -58,7 +58,6 @@ const getApiAuthorizerToken = async (component_access_token, authorizer_appid, a
 
 const getApiGetAuthorizerInfo = async (component_access_token, authorizer_appid) => {
   const url = `https://api.weixin.qq.com/cgi-bin/component/api_get_authorizer_info?component_access_token=${component_access_token}`
-  console.log(url)
   return request({
     url,
     method: 'post',

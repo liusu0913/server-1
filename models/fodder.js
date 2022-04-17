@@ -102,6 +102,15 @@ module.exports = sequelize => {
       autoIncrement: false,
       comment: "创建人的机构代码",
       field: "create_company_code"
+    },
+    disabled: {
+      type: DataTypes.ENUM('1', '0'),
+      allowNull: false,
+      defaultValue: "1",
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "disabled"
     }
   };
   const options = {

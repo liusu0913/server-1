@@ -1,4 +1,4 @@
-const { active, tags, activeType, activeTags } = require('~/models')
+const { active, activeTags, activeRemind, tags, activeType, pvLog, shareLog, stayMsgLog, questionLog, stayTimeLog } = require('~/models')
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
 const { Op } = require('sequelize')
@@ -22,8 +22,21 @@ module.exports = {
         },
         belongCompany: session_user.belongCompany
       }
-      const count = await active.destroy({ where })
-      return util.format.sucHandler({ count })
+      const [count = 0] = await active.update({
+        disabled: '0'
+      }, { where })
+      if (count > 0) {
+        activeRemind.update({ disabled: '0' }, { where })
+        activeTags.update({ disabled: '0' }, { where })
+        pvLog.update({ disabled: '0' }, { where })
+        shareLog.update({ disabled: '0' }, { where })
+        stayMsgLog.update({ disabled: '0' }, { where })
+        stayTimeLog.update({ disabled: '0' }, { where })
+        questionLog.update({ disabled: '0' }, { where })
+        return util.format.sucHandler({ count })
+      } else {
+        return util.format.errHandler('更新失败，没有找到可以更新的记录!')
+      }
     } catch (ex) {
       logger.error(`delete|error:${ex.message}|stack:${ex.stack}`)
       return util.format.errHandler(ex)
@@ -35,6 +48,7 @@ module.exports = {
       data = util.format.dataProcessor(data)
       const searchArr = ['title', 'activeId']
       const { where } = data
+      where.disabled = '1'
       searchArr.forEach(key => {
         if (where[key]) {
           where[key] = {
@@ -42,7 +56,6 @@ module.exports = {
           }
         }
       })
-
       const result = await active.findAndCountAll({
         ...data,
         where: {
@@ -134,8 +147,16 @@ module.exports = {
         ...where,
         belongCompany: session_user.belongCompany
       }
-      const count = await active.destroy({ where })
+      const [count = 0] = await active.update({
+        disabled: '0'
+      }, { where })
       if (count > 0) {
+        activeRemind.update({ disabled: '0' }, { where })
+        pvLog.update({ disabled: '0' }, { where })
+        shareLog.update({ disabled: '0' }, { where })
+        stayMsgLog.update({ disabled: '0' }, { where })
+        stayTimeLog.update({ disabled: '0' }, { where })
+        questionLog.update({ disabled: '0' }, { where })
         return util.format.sucHandler({ count })
       } else {
         return util.format.errHandler('记录已被删除或不存在该记录!')

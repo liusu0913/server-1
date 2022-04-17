@@ -14,7 +14,6 @@ const bind = async (access_token, appid, open_appid) => {
 
 const create = async (access_token, appid) => {
   const url = `https://api.weixin.qq.com/cgi-bin/open/create?access_token=${access_token}`
-  console.log(url, appid)
   return request({
     url,
     method: 'post',
@@ -26,7 +25,6 @@ const create = async (access_token, appid) => {
 
 const get = async (access_token, appid) => {
   const url = `https://api.weixin.qq.com/cgi-bin/open/get?access_token=${access_token}`
-  console.log(url, appid)
   return request({
     url,
     method: 'post',

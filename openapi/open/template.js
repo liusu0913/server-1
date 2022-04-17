@@ -3,7 +3,6 @@ const request = require('~/libs/request')
 // 代码模板库设置
 const gettemplatedraftlist = async (access_token) => {
   const url = `https://api.weixin.qq.com/wxa/gettemplatedraftlist?access_token=${access_token}`
-  console.log(url)
   return request({
     url,
     method: 'get'

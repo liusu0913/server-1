@@ -1,50 +1,42 @@
 const sequelize = require('~/libs/db')
 const { QueryTypes } = require('sequelize')
+const { wxuser } = require('~/models')
+const { Op } = require('sequelize')
 
 module.exports = {
   async visitor (ctx) {
     const { session_user } = ctx
-    const jobId = session_user.jobId
-    const belongCompany = session_user.belongCompany
-    const date = new Date()
-    const today = date.toISOString().slice(0, 10)
-    date.setDate(date.getDate() - 1)
-    const yesterday = date.toISOString().slice(0, 10)
-    const total = await sequelize.query(`select count(distinct open_id) as uv
-                                         from wxuser
-                                         where source_job_id = ?
-                                           and belong_company = ?`,
-    {
-      replacements: [jobId, belongCompany],
-      type: QueryTypes.SELECT
-    })
-    const data = {
-      total: total[0].uv,
-      today: 0,
-      yesterday: 0
+    const where = {
+      sourceJobId: session_user.jobId,
+      belongCompany: session_user.belongCompany
     }
-    const result = await sequelize.query(`select date (updated_at) as date, count (distinct open_id) as uv
-                                          from wxuser
-                                          where source_job_id = ?
-                                            and belong_company = ?
-                                            and (date (updated_at) = ?
-                                             or date (updated_at) = ?)
-                                          group by date (updated_at)`,
-    {
-      replacements: [jobId, belongCompany, today, yesterday],
-      type: QueryTypes.SELECT
+    const total = await wxuser.count({
+      where
     })
-    for (const v of result) {
-      if (v.date === today) {
-        data.today = v.uv
-      } else {
-        data.yesterday = v.uv
+    const yesterday = await wxuser.count({
+      where: {
+        ...where,
+        createdAt: {
+          [Op.gte]: new Date(new Date().getTime() - 2 * 24 * 60 * 60 * 1000)
+        }
       }
-    }
+    })
+    const today = await wxuser.count({
+      where: {
+        ...where,
+        createdAt: {
+          [Op.gte]: new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000)
+        }
+      }
+    })
     return {
       code: 0,
       message: 'success',
-      data: data
+      data: {
+        total,
+        yesterday,
+        today
+      }
     }
   },
 
