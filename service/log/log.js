@@ -164,6 +164,9 @@ module.exports = {
       delete data.name
       delete data.openId
       delete data.belongCompany
+      if (!data.sourceOpenId) {
+        delete data.sourceOpenId
+      }
       wxUser.update(data, {
         openId,
         belongCompany
