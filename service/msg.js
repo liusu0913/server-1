@@ -21,6 +21,7 @@ module.exports = {
       }
     }
     const mp_template_msg = {
+      touser: openID,
       appid: global.config.serviceAccount.appid,
       template_id: templateID,
       url: body.url,
@@ -28,7 +29,7 @@ module.exports = {
     }
     const ACCESS_TOKEN = await mpAuth.getAccessTokenRemote(global.config.mp.appid, global.config.mp.secret)
     logger.info('ACCESS_TOKEN---> ', JSON.stringify(ACCESS_TOKEN))
-    const res = await mpMsg.sendMsg(ACCESS_TOKEN.access_token, openID, mp_template_msg)
+    const res = await mpMsg.sendTemplateMsg(ACCESS_TOKEN.access_token, mp_template_msg)
     logger.info('Template Msg---> ', JSON.stringify(res))
     if (res.errcode === 43004) {
       return {

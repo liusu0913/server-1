@@ -80,5 +80,13 @@ module.exports = {
         mp_template_msg
       }
     })
+  },
+  sendTemplateMsg: async (access_token, mp_template_msg) => {
+    const url = `https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=${access_token}`
+    return await request({
+      url,
+      method: 'post',
+      data: mp_template_msg
+    })
   }
 }

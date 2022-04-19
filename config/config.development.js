@@ -29,8 +29,8 @@ module.exports = {
     secret: '78442db1117beb95b0d8166f7a7bceca'
   },
   serviceAccount: {
-    appid: 'XXXX',
-    secret: 'XXXX'
+    appid: 'wxc26091fcd766a086',
+    secret: '442a644e3d3497dc6224eeb5d6dfa536'
   },
   jwt: {
     secret: 'XXXX',
