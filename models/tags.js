@@ -13,6 +13,24 @@ module.exports = sequelize => {
       comment: null,
       field: "id"
     },
+    fatherId: {
+      type: DataTypes.INTEGER(10),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "father_id"
+    },
+    type: {
+      type: DataTypes.ENUM('1', '2', '3'),
+      allowNull: false,
+      defaultValue: "1",
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "type"
+    },
     name: {
       type: DataTypes.STRING(255),
       allowNull: false,
@@ -30,15 +48,6 @@ module.exports = sequelize => {
       autoIncrement: false,
       comment: null,
       field: "icon"
-    },
-    fatherId: {
-      type: DataTypes.INTEGER(10),
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "father_id"
     },
     belongCompany: {
       type: DataTypes.INTEGER(10),
@@ -69,7 +78,7 @@ module.exports = sequelize => {
     },
     disabled: {
       type: DataTypes.ENUM('1', '0'),
-      allowNull: true,
+      allowNull: false,
       defaultValue: "1",
       primaryKey: false,
       autoIncrement: false,

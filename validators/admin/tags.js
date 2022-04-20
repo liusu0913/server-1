@@ -3,7 +3,7 @@ module.exports = {
     required: ['offset', 'count']
   },
   create: {
-    required: ['name', 'fatherId']
+    required: ['name', 'fatherId', 'type']
   },
   update: {
     required: ['name', 'id']
@@ -14,6 +14,9 @@ module.exports = {
   schema: {
     type: 'object',
     properties: {
+      type: {
+        type: 'string'
+      },
       offset: {
         type: 'integer'
       },

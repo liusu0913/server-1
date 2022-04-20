@@ -49,9 +49,15 @@ module.exports = {
       const { search } = data
       delete data.search
       data = util.format.dataProcessor(data)
+      const { where } = data
+      delete data.where
+      const { sourceOpenId } = where
       const queryWhere = {
         sourceJobId: session_user.jobId,
         belongCompany: session_user.belongCompany
+      }
+      if (sourceOpenId) {
+        queryWhere.sourceOpenId = sourceOpenId
       }
       if (search) {
         queryWhere.name = {

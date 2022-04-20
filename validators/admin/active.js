@@ -9,7 +9,6 @@ module.exports = {
     required: [
       'title',
       'url',
-      'typeId',
       'diffuseTypeId',
       'startTime'
     ]

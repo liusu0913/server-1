@@ -2,6 +2,8 @@ const { active, tags, activeType, activeTags, pvLog, shareLog, stayMsgLog } = re
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
 const { Op } = require('sequelize')
+const moment = require('moment')
+
 function getInArr (id) {
   const inArr = []
   for (let i = 0; i < id.length; i++) {
@@ -48,8 +50,21 @@ module.exports = {
         disabled: '1'
       }
       if (day) {
-        where.createdAt = {
-          [Op.gte]: new Date(new Date().getTime() - day * 24 * 60 * 60 * 1000)
+        if (day === 1) {
+          where.createdAt = {
+            [Op.gte]: new Date(moment(new Date()).format('YYYY-MM-DD'))
+          }
+        } else if (day === 2) {
+          where.createdAt = {
+            [Op.between]: [
+              new Date(moment(new Date()).subtract(1, 'days').format('YYYY-MM-DD')),
+              new Date(moment(new Date()).format('YYYY-MM-DD'))
+            ]
+          }
+        } else {
+          where.createdAt = {
+            [Op.gte]: new Date(moment(new Date()).subtract(day, 'days').format('YYYY-MM-DD'))
+          }
         }
       }
       const pv = await pvLog.count({
@@ -212,8 +227,7 @@ module.exports = {
         code: 0,
         data: {
           list,
-          count,
-          session_user
+          count
         },
         message: 'success'
       }

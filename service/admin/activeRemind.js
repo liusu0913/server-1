@@ -17,7 +17,6 @@ function forMatActiveData (active) {
     title: active.title,
     url: active.url,
     img: active.img,
-    activeUse: active.activeUse,
     tags,
     type: active.type,
     diffuseTypeId: active.diffuseTypeId,
@@ -157,7 +156,8 @@ module.exports = {
           updatedAt: item.updatedAt,
           createdAt: item.createdAt,
           jobId: item.jobId,
-          newMsg
+          newMsg,
+          use: item.use || '未知'
         })
       })
       return {

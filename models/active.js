@@ -51,7 +51,7 @@ module.exports = sequelize => {
     },
     typeId: {
       type: DataTypes.INTEGER(20),
-      allowNull: false,
+      allowNull: true,
       defaultValue: null,
       primaryKey: false,
       autoIncrement: false,
@@ -165,15 +165,6 @@ module.exports = sequelize => {
       autoIncrement: false,
       comment: "数据是否删除",
       field: "disabled"
-    },
-    activeUse: {
-      type: DataTypes.STRING(20),
-      allowNull: false,
-      defaultValue: null,
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "active_use"
     }
   };
   const options = {

@@ -3,7 +3,12 @@ module.exports = {
     required: ['offset', 'count', 'type']
   },
   create: {
-    required: ['activeId', 'jobIds', 'type']
+    required: [
+      'activeId',
+      'jobIds',
+      'type',
+      'use'
+    ]
   },
   schema: {
     type: 'object',
@@ -23,6 +28,10 @@ module.exports = {
       activeId: {
         type: 'string',
         maxLength: 255
+      },
+      use: {
+        type: 'string',
+        maxLength: 10
       },
       jobId: {
         type: 'string',

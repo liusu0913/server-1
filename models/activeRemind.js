@@ -40,6 +40,24 @@ module.exports = sequelize => {
       comment: "提醒类型",
       field: "type"
     },
+    disabled: {
+      type: DataTypes.ENUM('1', '0'),
+      allowNull: false,
+      defaultValue: "1",
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "disabled"
+    },
+    use: {
+      type: DataTypes.STRING(10),
+      allowNull: false,
+      defaultValue: null,
+      primaryKey: false,
+      autoIncrement: false,
+      comment: null,
+      field: "use"
+    },
     belongCompany: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
@@ -66,15 +84,6 @@ module.exports = sequelize => {
       autoIncrement: false,
       comment: null,
       field: "updated_at"
-    },
-    disabled: {
-      type: DataTypes.ENUM('1', '0'),
-      allowNull: false,
-      defaultValue: "1",
-      primaryKey: false,
-      autoIncrement: false,
-      comment: null,
-      field: "disabled"
     }
   };
   const options = {

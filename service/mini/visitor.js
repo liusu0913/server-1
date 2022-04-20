@@ -2,6 +2,7 @@ const sequelize = require('~/libs/db')
 const { QueryTypes } = require('sequelize')
 const { wxuser } = require('~/models')
 const { Op } = require('sequelize')
+const moment = require('moment')
 
 module.exports = {
   async visitor (ctx) {
@@ -25,7 +26,7 @@ module.exports = {
       where: {
         ...where,
         createdAt: {
-          [Op.gte]: new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000)
+          [Op.gte]: new Date(moment(new Date()).format('YYYY-MM-DD'))
         }
       }
     })

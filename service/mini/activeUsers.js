@@ -1,18 +1,5 @@
-const sequelize = require('~/libs/db')
-const { QueryTypes, Op } = require('sequelize')
-const users = require('../admin/user')
-const { wxuser, pvLog, active, shareLog, stayMsgLog, questionLog } = require('~/models')
-
-function formatActiveUser (arr, obj) {
-  arr.forEach((item) => {
-    if (obj[item.open_id]) {
-      obj[item.open_id] = obj[item.open_id] + 1
-    } else {
-      obj[item.open_id] = 1
-    }
-  })
-  return obj
-}
+const { Op } = require('sequelize')
+const { wxuser, pvLog, active, shareLog } = require('~/models')
 
 module.exports = {
   async recommend (body, ctx) {

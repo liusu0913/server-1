@@ -1,6 +1,8 @@
 const { pvLog, shareLog, active, stayMsgLog, user } = require('~/models')
 const util = require('~/util')
 const logger = require('~/util/logger')(__filename)
+const moment = require('moment')
+
 const { Op } = require('sequelize')
 
 function formatData (arr, activeList) {
@@ -8,11 +10,15 @@ function formatData (arr, activeList) {
   const list = []
   arr.forEach(item => {
     const obj = {}
-    count += item.count
-    obj.activeId = item.active_id
     const nameList = activeList.filter((active) => {
       return item.active_id === active.activeId
     })[0]
+    if (!nameList) {
+      return
+    }
+    count += item.count
+    obj.activeId = item.active_id
+    obj.active = nameList
     obj.name = nameList ? nameList.title : '未知活动'
     obj.count = item.count
     list.push(obj)
@@ -101,7 +107,7 @@ module.exports = {
         },
         belongCompany: session_user.belongCompany
       }
-      const activeCount = await active.count({
+      const activeList = await active.findAll({
         where
       })
       const addActiveCount = await active.count({
@@ -124,7 +130,12 @@ module.exports = {
       const pvRes = await pvLog.count({
         attributes: ['open_id'],
         group: ['open_id'],
-        where: logWhere
+        where: logWhere,
+        include: [{
+          model: active,
+          as: 'active',
+          where
+        }]
       })
       pvRes.forEach(item => {
         pv += item.count
@@ -135,28 +146,43 @@ module.exports = {
         where: {
           ...logWhere,
           createdAt: {
-            [Op.gte]: new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000)
+            [Op.gte]: new Date(moment(new Date()).format('YYYY-MM-DD'))
           }
-        }
+        },
+        include: [{
+          model: active,
+          as: 'active',
+          where
+        }]
       })
       addPvRes.forEach(item => {
         addPv += item.count
       })
       const shareCount = await shareLog.count({
-        where: logWhere
+        where: logWhere,
+        include: [{
+          model: active,
+          as: 'active',
+          where
+        }]
       })
       const addShareCount = await shareLog.count({
         where: {
           ...logWhere,
           createdAt: {
-            [Op.gte]: new Date(new Date().getTime() - 1 * 24 * 60 * 60 * 1000)
+            [Op.gte]: new Date(moment(new Date()).format('YYYY-MM-DD'))
           }
-        }
+        },
+        include: [{
+          model: active,
+          as: 'active',
+          where
+        }]
       })
       return {
         code: 0,
         data: {
-          activeCount,
+          activeCount: activeList.length,
           addActiveCount,
           pv,
           addPv,
@@ -184,8 +210,14 @@ module.exports = {
         }
       }
       if (day) {
-        searchRule.createdAt = {
-          [Op.gte]: new Date(new Date().getTime() - day * 24 * 60 * 60 * 1000)
+        if (day === 1) {
+          searchRule.createdAt = {
+            [Op.gte]: new Date(moment(new Date()).format('YYYY-MM-DD'))
+          }
+        } else {
+          searchRule.createdAt = {
+            [Op.gte]: new Date(new Date().getTime() - day * 24 * 60 * 60 * 1000)
+          }
         }
       }
       const activeList = await active.findAll({
@@ -245,8 +277,14 @@ module.exports = {
         }
       }
       if (day) {
-        searchRule.createdAt = {
-          [Op.gte]: new Date(new Date().getTime() - day * 24 * 60 * 60 * 1000)
+        if (day === 1) {
+          searchRule.createdAt = {
+            [Op.gte]: new Date(moment(new Date()).format('YYYY-MM-DD'))
+          }
+        } else {
+          searchRule.createdAt = {
+            [Op.gte]: new Date(new Date().getTime() - day * 24 * 60 * 60 * 1000)
+          }
         }
       }
       const activeList = await active.findAll({
