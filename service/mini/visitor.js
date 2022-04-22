@@ -18,7 +18,7 @@ module.exports = {
       where: {
         ...where,
         createdAt: {
-          [Op.gte]: new Date(new Date().getTime() - 2 * 24 * 60 * 60 * 1000)
+          [Op.gte]: new Date(moment(new Date()).subtract(1, 'days').format('YYYY-MM-DD'))
         }
       }
     })
@@ -35,7 +35,7 @@ module.exports = {
       message: 'success',
       data: {
         total,
-        yesterday: (yesterday - today),
+        yesterday: yesterday - today,
         today
       }
     }
